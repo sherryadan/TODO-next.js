@@ -7,7 +7,7 @@ export async function PUT(req) {
 
   try {
     const datatask = await req.json();
-    console.log("hello world", datatask);
+    // console.log("hello world", datatask);
     const renewtask = datatask;
     const updatedTask = await Task.findByIdAndUpdate(datatask._id, renewtask);
 
@@ -46,3 +46,5 @@ export async function DELETE(req) {
     );
   }
 }
+
+

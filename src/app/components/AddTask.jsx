@@ -74,39 +74,40 @@ const AddTask = () => {
   };
   console.log("Edit task", mainTasks);
   return (
-    <div className="gap-2 p-5">
-      <form onSubmit={submitHandler} className="mb-5">
+    <div className=" gap-2 p-5">
+      <form onSubmit={submitHandler} className="mb-5" >
         <input
           type="text"
-          className="border-2 px-3 py-2 mr-3 w-64"
+          className="border-2 px-3 py-2 mr-3 w-64 bg-gray-300"
           placeholder="Enter Task Title"
           value={title}
-          onChange={(e) => setTitle(e.target.value)}
+          onChange={(e) => setTitle(e.target.value)} required
         />
         <input
           type="text"
-          className="border-2 px-3 py-2 mr-3 w-64"
+          className="border-2 px-3 py-2 mr-3 w-64  bg-gray-300"
           placeholder="Enter Description"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
+          required
         />
-        <button className="bg-black text-white px-4 py-2 font-bold rounded-sm">
+        <button className="bg-gray-700 text-white px-4 py-2 font-bold rounded-sm cursor-pointer">
           {editTaskId !== null ? "Update Task" : "Add Task"}
         </button>
       </form>
 
-      <div className="bg-gray-200 p-5 rounded-lg">
+      <div className="bg-gray-500 p-5 rounded-lg text-amber-50">
         {mainTasks.length > 0 ? (
           <table className="w-full border-collapse border border-gray-400">
             <thead>
-              <tr className="bg-gray-500 text-white">
-                <th className="border border-gray-400 px-4 py-2 text-left">
+              <tr className="bg-gray-700 text-white">
+                <th className="border border-gray-400 px-4 py-2 text-center">
                   Title
                 </th>
-                <th className="border border-gray-400 px-4 py-2 text-left">
+                <th className="border border-gray-400 px-4 py-2 text-center">
                   Description
                 </th>
-                <th className="border border-gray-400 px-4 py-2 text-left">
+                <th className="border border-gray-400 px-4 py-2 text-center">
                   Action
                 </th>
               </tr>
@@ -120,21 +121,21 @@ const AddTask = () => {
                   <td className="border border-gray-400 px-4 py-2">
                     {task.description}
                   </td>
-                  <td className="border border-gray-400 px-4 py-2">
+                  <td className="border border-gray-400 px-4 py-2 flex justify-center gap-2">
                     <button
-                      className="bg-blue-100 text-black px-3 py-1 rounded-sm mr-2"
+                      className="bg-blue-400 text-white px-3 py-1 rounded-sm cursor-pointer "
                       onClick={() => router.push(`/tasks/${task._id}`)}
                     >
                       <MdRemoveRedEye />
                     </button>
                     <button
-                      className="bg-blue-300 text-white px-3 py-1 rounded-sm mr-2"
+                      className="bg-yellow-400 text-white px-3 py-1 rounded-sm cursor-pointer"
                       onClick={() => editTask(task)}
                     >
                       <MdEdit />
                     </button>
                     <button
-                      className="bg-red-800 text-white px-3 py-1 rounded-sm"
+                      className="bg-red-400 text-white px-3 py-1 rounded-sm cursor-pointer"
                       onClick={() => deleteTask(task._id)}
                     >
                       <MdDelete />
