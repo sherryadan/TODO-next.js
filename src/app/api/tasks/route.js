@@ -6,7 +6,6 @@ export async function GET() {
   await connectionToDatabase();
   return NextResponse.json(tasks);
 }
-
 export async function POST(req) {
    
     await connectionToDatabase();
