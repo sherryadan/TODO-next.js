@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import connectionToDatabase from "../../../../lib/mongoosedb";
 import Task from "../../../../models/Task";
 
-let tasks = [];
 export async function GET() {
   await connectionToDatabase();
   return NextResponse.json(tasks);
