@@ -9,14 +9,13 @@ const AddTask = () => {
   const [description, setDescription] = useState("");
   const [mainTasks, setTasks] = useState([]);
   const [editTaskId, setEditTaskId] = useState(null);
-const fetchTasks = async () => {
-      const res = await fetch("/api/tasks");
-      const data = await res.json();
-      setTasks(data);
-      console.log("Data", data);
-    };
+  const fetchTasks = async () => {
+    const res = await fetch("/api/tasks");
+    const data = await res.json();
+    setTasks(data);
+    console.log("Data", data);
+  };
   useEffect(() => {
-    
     fetchTasks();
   }, []);
 
@@ -24,8 +23,8 @@ const fetchTasks = async () => {
     e.preventDefault();
 
     if (editTaskId !== null) {
-      const Updatetask={ _id: editTaskId, title, description }
-       await fetch(`/api/tasks/${editTaskId}`, {
+      const Updatetask = { _id: editTaskId, title, description };
+      await fetch(`/api/tasks/${editTaskId}`, {
         method: "PUT",
         body: JSON.stringify(Updatetask),
         headers: {
@@ -33,10 +32,8 @@ const fetchTasks = async () => {
         },
       });
 
-      
       fetchTasks();
       setEditTaskId(null);
-      
     } else {
       const newTask = { title, description };
       const res = await fetch("/api/tasks", {
@@ -65,8 +62,8 @@ const fetchTasks = async () => {
         "Content-Type": "application/json",
       },
     });
-  
-    fetchTasks()
+
+    fetchTasks();
     // setTasks(mainTasks.filter((task) => task.id !== id));
   };
 
@@ -75,7 +72,7 @@ const fetchTasks = async () => {
     setTitle(task.title);
     setDescription(task.description);
   };
-console.log("Edit task", mainTasks)
+  console.log("Edit task", mainTasks);
   return (
     <div className="gap-2 p-5">
       <form onSubmit={submitHandler} className="mb-5">
