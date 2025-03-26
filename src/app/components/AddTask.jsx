@@ -10,7 +10,6 @@ const AddTask = () => {
   const [mainTasks, setTasks] = useState([]);
   const [editTaskId, setEditTaskId] = useState(null);
 
-
   useEffect(() => {
     const fetchTasks = async () => {
       const res = await fetch("/api/tasks");
@@ -20,12 +19,10 @@ const AddTask = () => {
     fetchTasks();
   }, []);
 
-
   const submitHandler = async (e) => {
     e.preventDefault();
 
     if (editTaskId !== null) {
-
       const res = await fetch("/api/tasks", {
         method: "PUT",
         body: JSON.stringify({ id: editTaskId, title, description }),
@@ -33,8 +30,10 @@ const AddTask = () => {
 
       if (res.ok) {
         const updatedTask = await res.json();
-        setTasks(mainTasks.map((task) => (task.id === editTaskId ? updatedTask : task)));
-        setEditTaskId(null); 
+        setTasks(
+          mainTasks.map((task) => (task.id === editTaskId ? updatedTask : task))
+        );
+        setEditTaskId(null);
       }
     } else {
       const newTask = { title, description };
@@ -60,7 +59,6 @@ const AddTask = () => {
     });
     setTasks(mainTasks.filter((task) => task.id !== id));
   };
-
 
   const editTask = (task) => {
     setEditTaskId(task.id);
@@ -95,16 +93,26 @@ const AddTask = () => {
           <table className="w-full border-collapse border border-gray-400">
             <thead>
               <tr className="bg-gray-500 text-white">
-                <th className="border border-gray-400 px-4 py-2 text-left">Title</th>
-                <th className="border border-gray-400 px-4 py-2 text-left">Description</th>
-                <th className="border border-gray-400 px-4 py-2 text-left">Action</th>
+                <th className="border border-gray-400 px-4 py-2 text-left">
+                  Title
+                </th>
+                <th className="border border-gray-400 px-4 py-2 text-left">
+                  Description
+                </th>
+                <th className="border border-gray-400 px-4 py-2 text-left">
+                  Action
+                </th>
               </tr>
             </thead>
             <tbody>
               {mainTasks.map((task, i) => (
                 <tr key={i} className="border border-gray-400">
-                  <td className="border border-gray-400 px-4 py-2">{task.title}</td>
-                  <td className="border border-gray-400 px-4 py-2">{task.description}</td>
+                  <td className="border border-gray-400 px-4 py-2">
+                    {task.title}
+                  </td>
+                  <td className="border border-gray-400 px-4 py-2">
+                    {task.description}
+                  </td>
                   <td className="border border-gray-400 px-4 py-2">
                     <button
                       className="bg-blue-100 text-black px-3 py-1 rounded-sm mr-2"
@@ -130,7 +138,9 @@ const AddTask = () => {
             </tbody>
           </table>
         ) : (
-          <h2 className="text-center text-lg font-semibold">No Task Available</h2>
+          <h2 className="text-center text-lg font-semibold">
+            No Task Available
+          </h2>
         )}
       </div>
     </div>

@@ -23,7 +23,10 @@ const TaskDetails = ({ params }) => {
     <div className="p-5">
       <h1 className="text-3xl font-bold">{task.title}</h1>
       <p className="text-lg">{task.description}</p>
-      <button className="bg-blue-500 text-white px-4 py-2 mt-3" onClick={() => router.push("/")}>
+      <button
+        className="bg-blue-500 text-white px-4 py-2 mt-3"
+        onClick={() => router.push("/")}
+      >
         Back to Tasks
       </button>
     </div>
