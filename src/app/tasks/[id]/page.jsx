@@ -1,14 +1,15 @@
 "use client";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
-const TaskDetails = ({ params }) => {
-  const { id } = params;
+const TaskDetails = () => {
+  const { id } = useParams();
   const [task, setTask] = useState(null);
   const router = useRouter();
 
   useEffect(() => {
     const fetchTask = async () => {
+      if (!id ) return; 
       const res = await fetch(`/api/tasks`);
       const tasks = await res.json();
       const foundTask = tasks.find((t) => t.id == id);
