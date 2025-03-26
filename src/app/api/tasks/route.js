@@ -1,12 +1,20 @@
 import { NextResponse } from "next/server";
+import connectionToDatabase from "../../../../lib/mongoosedb";
+import Task from "../../../../models/Task";
 
 let tasks = [];
 export async function GET() {
+  await connectionToDatabase();
   return NextResponse.json(tasks);
 }
 
 export async function POST(req) {
-  const { title, description } = await req.json();
+   
+    await connectionToDatabase();
+  const { title, description } = await req.json() 
+  const freshTask = new Task ( { title, description});
+  await freshTask.save();
+
   if (!title || !description) {
     return NextResponse.json({ error: "ERROR" });
   }
@@ -17,6 +25,7 @@ export async function POST(req) {
 }
 
 export async function PUT(req) {
+    await connectionToDatabase();
   const { id, title, description } = await req.json();
   const index = tasks.findIndex((task) => task.id === id);
   
@@ -30,6 +39,7 @@ export async function PUT(req) {
 
 
 export async function DELETE(req) {
+    await connectionToDatabase();
   const { id } = await req.json();
   tasks = tasks.filter(task => task.id !== id);
   return NextResponse.json({ message: "DONE" });
