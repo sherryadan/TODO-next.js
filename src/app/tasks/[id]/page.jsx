@@ -6,7 +6,6 @@ const TaskDetails = () => {
   const { id } = useParams();
   const [task, setTask] = useState(null);
   const router = useRouter();
-
   useEffect(() => {
     const fetchTask = async () => {
       if (!id ) return; 

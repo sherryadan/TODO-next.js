@@ -9,13 +9,14 @@ const AddTask = () => {
   const [description, setDescription] = useState("");
   const [mainTasks, setTasks] = useState([]);
   const [editTaskId, setEditTaskId] = useState(null);
-
-  useEffect(() => {
-    const fetchTasks = async () => {
+const fetchTasks = async () => {
       const res = await fetch("/api/tasks");
       const data = await res.json();
       setTasks(data);
+      console.log("Data", data);
     };
+  useEffect(() => {
+    
     fetchTasks();
   }, []);
 
@@ -23,23 +24,27 @@ const AddTask = () => {
     e.preventDefault();
 
     if (editTaskId !== null) {
-      const res = await fetch("/api/tasks", {
+      const Updatetask={ _id: editTaskId, title, description }
+       await fetch(`/api/tasks/${editTaskId}`, {
         method: "PUT",
-        body: JSON.stringify({ id: editTaskId, title, description }),
+        body: JSON.stringify(Updatetask),
+        headers: {
+          "Content-Type": "application/json",
+        },
       });
 
-      if (res.ok) {
-        const updatedTask = await res.json();
-        setTasks(
-          mainTasks.map((task) => (task.id === editTaskId ? updatedTask : task))
-        );
-        setEditTaskId(null);
-      }
+      
+      fetchTasks();
+      setEditTaskId(null);
+      
     } else {
       const newTask = { title, description };
       const res = await fetch("/api/tasks", {
         method: "POST",
         body: JSON.stringify(newTask),
+        headers: {
+          "Content-Type": "application/json",
+        },
       });
 
       if (res.ok) {
@@ -53,19 +58,24 @@ const AddTask = () => {
   };
 
   const deleteTask = async (id) => {
-    await fetch("/api/tasks", {
+    await fetch(`/api/tasks/${id}`, {
       method: "DELETE",
       body: JSON.stringify({ id }),
+      headers: {
+        "Content-Type": "application/json",
+      },
     });
-    setTasks(mainTasks.filter((task) => task.id !== id));
+  
+    fetchTasks()
+    // setTasks(mainTasks.filter((task) => task.id !== id));
   };
 
   const editTask = (task) => {
-    setEditTaskId(task.id);
+    setEditTaskId(task._id);
     setTitle(task.title);
     setDescription(task.description);
   };
-
+console.log("Edit task", mainTasks)
   return (
     <div className="gap-2 p-5">
       <form onSubmit={submitHandler} className="mb-5">
@@ -116,7 +126,7 @@ const AddTask = () => {
                   <td className="border border-gray-400 px-4 py-2">
                     <button
                       className="bg-blue-100 text-black px-3 py-1 rounded-sm mr-2"
-                      onClick={() => router.push(`/tasks/${task.id}`)}
+                      onClick={() => router.push(`/tasks/${task._id}`)}
                     >
                       <MdRemoveRedEye />
                     </button>
@@ -128,7 +138,7 @@ const AddTask = () => {
                     </button>
                     <button
                       className="bg-red-800 text-white px-3 py-1 rounded-sm"
-                      onClick={() => deleteTask(task.id)}
+                      onClick={() => deleteTask(task._id)}
                     >
                       <MdDelete />
                     </button>
