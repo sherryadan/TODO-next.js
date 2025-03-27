@@ -1,7 +1,10 @@
 "use client";
 import React, { useState } from "react";
-
+import { IoArrowBackCircle } from "react-icons/io5";
+import { useRouter } from "next/navigation";
 const Form = () => {
+      const router = useRouter();
+    
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -244,7 +247,15 @@ const Form = () => {
         <button className="w-full bg-blue-600 text-white py-3 rounded text-lg">
           Submit
         </button>
+      
       </form>
+      <button
+          className="flex items-center justify-center gap-2 bg-green-800 text-white px-5 py-3 rounded-lg font-semibold hover:bg-green-950 transition duration-200 mx-auto cursor-pointer"
+          onClick={() => router.push("/")}
+        >
+          <IoArrowBackCircle size={24} />
+          Back
+        </button>
     </div>
   );
 };
