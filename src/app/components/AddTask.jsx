@@ -166,15 +166,15 @@ const AddTask = () => {
           <td className="border border-gray-400 px-4 py-2 text-center">{task.title}</td>
           <td className="border border-gray-400 px-4 py-2 text-center">{truncateDescription(task.description)}</td>
           <td className="px-4 py-2 flex justify-center gap-2 flex-wrap">
-            <button className="bg-blue-400 text-white text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2 rounded-md"
+            <button className="bg-blue-400 hover:bg-blue-600 text-white text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2 rounded-md cursor-pointer"
               onClick={() => router.push(`/tasks/${task._id}`)}>
               <MdRemoveRedEye />
             </button>
-            <button className="bg-yellow-400 text-white text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2 rounded-md"
+            <button className="bg-yellow-400 hover:bg-yellow-600 text-white text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2 rounded-md cursor-pointer"
               onClick={() => editTask(task)}>
               <MdEdit />
             </button>
-            <button className="bg-red-400 text-white text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2 rounded-md"
+            <button className="bg-red-400 hover:bg-red-600 text-white text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2 rounded-md cursor-pointer"
               onClick={() => deleteTask(task._id)}>
               <MdDelete />
             </button>

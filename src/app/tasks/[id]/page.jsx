@@ -32,7 +32,7 @@ const TaskDetails = () => {
   }
 
   return (
-    <div className="flex justify-center items-center min-h-screen min-w-screen bg-#dae1ea ">
+    <div className="flex justify-center items-center  min-w-screen bg-#dae1ea ">
       <div className="bg-gray-300 shadow-xl rounded-xl p-6 w-full max-w-lg text-center">
         <h1 className="text-3xl font-bold text-gray-800 mb-6">Task Details</h1>
 
@@ -45,7 +45,7 @@ const TaskDetails = () => {
         </div>
 
         <button
-          className="flex items-center justify-center gap-2 bg-green-950 text-white px-5 py-3 rounded-lg font-semibold hover:bg-blue-600 transition duration-200 mx-auto cursor-pointer"
+          className="flex items-center justify-center gap-2 bg-green-800 text-white px-5 py-3 rounded-lg font-semibold hover:bg-green-950 transition duration-200 mx-auto cursor-pointer"
           onClick={() => router.push("/")}
         >
           <IoArrowBackCircle size={24} />
