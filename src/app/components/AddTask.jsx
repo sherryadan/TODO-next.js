@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { MdDelete, MdEdit, MdRemoveRedEye } from "react-icons/md";
+import { ImSpinner6 } from "react-icons/im";
 import { useRouter } from "next/navigation";
 
 const AddTask = () => {
@@ -9,19 +10,48 @@ const AddTask = () => {
   const [description, setDescription] = useState("");
   const [mainTasks, setTasks] = useState([]);
   const [editTaskId, setEditTaskId] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState({ title: "", description: "" });
 
   const fetchTasks = async () => {
+    setLoading(true);
+    try{
     const res = await fetch("/api/tasks");
     const data = await res.json();
-    setTasks(data);
-  };
+    setTasks(data);}
+    catch(error){
+      console.error("Error fetching tasks:", error);
+    }
+    setLoading(false);
+    router.push("/");
+  }
+  ;
 
   useEffect(() => {
     fetchTasks();
   }, []);
 
+  const validateInputs = () => {
+    let isValid = true;
+    let newErrors = { title: "", description: "" };
+
+    if (!title.trim() || /^\d+$/.test(title)) {
+      newErrors.title = "Invalid Title";
+      isValid = false;
+    }
+
+    if (!description.trim() || /^\d+$/.test(description)) {
+      newErrors.description = " Invalid Description";
+      isValid = false;
+    }
+
+    setErrors(newErrors);
+    return isValid;
+  };
+
   const submitHandler = async (e) => {
     e.preventDefault();
+    if (!validateInputs()) return;
 
     if (editTaskId !== null) {
       const Updatetask = { _id: editTaskId, title, description };
@@ -52,6 +82,7 @@ const AddTask = () => {
 
     setTitle("");
     setDescription("");
+    setErrors({ title: "", description: "" });
   };
 
   const deleteTask = async (id) => {
@@ -71,73 +102,91 @@ const AddTask = () => {
     setTitle(task.title);
     setDescription(task.description);
   };
+  const truncateDescription = (text, wordLimit = 3) => {
+    const words = text.split(" ");
+    return words.length > wordLimit
+      ? words.slice(0, wordLimit).join(" ") + "..."
+      : text;
+  };
+
 
   return (
-    <div className="max-w-4xl mx-auto p-5">
+    <div className="max-w-4xl mx-auto p-5 mt-10">
+      <h1 className="text-3xl font-bold mb-4 text-center">Task Manager</h1>
       <form onSubmit={submitHandler} className="mb-5 flex flex-wrap gap-3">
-        <input
-          type="text"
-          className="border-2 px-3 py-2 w-full sm:w-64 bg-gray-300 rounded-md"
-          placeholder="Enter Task Title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          required
-        />
-        <input
-          type="text"
-          className="border-2 px-3 py-2 w-full sm:w-64 bg-gray-300 rounded-md"
-          placeholder="Enter Description"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          required
-        />
-        <button className="bg-gray-700 text-white px-4 py-2 rounded-md font-bold w-full sm:w-auto">
+        <div className="w-full sm:w-64">
+          <input
+            type="text"
+            className="border-2 px-3 py-2 w-full bg-gray-300 rounded-md"
+            placeholder="Enter Task Title"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+          />
+          <p className="text-red-500 text-xs min-h-[20px]">
+            {errors.title || " "}
+          </p>
+        </div>
+
+        <div className="w-full sm:w-64">
+          <input
+            type="text"
+            className="border-2 px-3 py-2 w-full bg-gray-300 rounded-md"
+            placeholder="Enter Description"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+          />
+          <p className="text-red-500 text-xs min-h-[20px]">
+            {errors.description || " "}
+          </p>
+        </div>
+
+        <button
+          type="submit"
+          className="bg-gray-700 text-white px-4 rounded-md font-bold py-2 h-[42px]"
+        >
           {editTaskId !== null ? "Update Task" : "Add Task"}
         </button>
       </form>
 
       <div className="bg-gray-500 p-5 rounded-lg text-amber-50 overflow-x-auto">
-        {mainTasks.length > 0 ? (
-          <table className="w-full border-collapse border border-gray-400 text-xs sm:text-sm">
-            <thead>
-              <tr className="bg-gray-700 text-white">
-                <th className="border border-gray-400 px-4 py-2 text-center">Title</th>
-                <th className="border border-gray-400 px-4 py-2 text-center">Description</th>
-                <th className="border border-gray-400 px-4 py-2 text-center">Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {mainTasks.map((task, i) => (
-                <tr key={i} className="border border-gray-400">
-                  <td className="border border-gray-400 px-4 py-2">{task.title}</td>
-                  <td className="border border-gray-400 px-4 py-2">{task.description}</td>
-                  <td className="border border-gray-400 px-4 py-2 flex justify-center gap-2 flex-wrap">
-                    <button
-                      className="bg-blue-400 text-white text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2 rounded-md"
-                      onClick={() => router.push(`/tasks/${task._id}`)}
-                    >
-                      <MdRemoveRedEye />
-                    </button>
-                    <button
-                      className="bg-yellow-400 text-white text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2 rounded-md"
-                      onClick={() => editTask(task)}
-                    >
-                      <MdEdit />
-                    </button>
-                    <button
-                      className="bg-red-400 text-white text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2 rounded-md"
-                      onClick={() => deleteTask(task._id)}
-                    >
-                      <MdDelete />
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        ) : (
-          <h2 className="text-center text-lg font-semibold">No Task Available</h2>
-        )}
+      {loading ? (
+  <h2 className="text-center text-lg font-semibold flex items-center justify-center"><ImSpinner6 className="animate-spin text-2xl mr-2"/></h2>
+) : mainTasks.length > 0 ? (
+  <table className="w-full border-collapse border border-gray-400 text-xs sm:text-sm">
+    <thead>
+      <tr className="bg-gray-700 text-white">
+        <th className="border border-gray-400 px-4 py-2 text-center">Title</th>
+        <th className="border border-gray-400 px-4 py-2 text-center">Description</th>
+        <th className="border border-gray-400 px-4 py-2 text-center">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {mainTasks.map((task, i) => (
+        <tr key={i} className="border border-gray-400">
+          <td className="border border-gray-400 px-4 py-2 text-center">{task.title}</td>
+          <td className="border border-gray-400 px-4 py-2 text-center">{truncateDescription(task.description)}</td>
+          <td className="px-4 py-2 flex justify-center gap-2 flex-wrap">
+            <button className="bg-blue-400 text-white text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2 rounded-md"
+              onClick={() => router.push(`/tasks/${task._id}`)}>
+              <MdRemoveRedEye />
+            </button>
+            <button className="bg-yellow-400 text-white text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2 rounded-md"
+              onClick={() => editTask(task)}>
+              <MdEdit />
+            </button>
+            <button className="bg-red-400 text-white text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2 rounded-md"
+              onClick={() => deleteTask(task._id)}>
+              <MdDelete />
+            </button>
+          </td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+) : (
+  <h2 className="text-center text-lg font-semibold">No Task Available</h2>
+)}
+
       </div>
     </div>
   );
