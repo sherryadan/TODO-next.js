@@ -9,12 +9,13 @@ const AddTask = () => {
   const [description, setDescription] = useState("");
   const [mainTasks, setTasks] = useState([]);
   const [editTaskId, setEditTaskId] = useState(null);
+
   const fetchTasks = async () => {
     const res = await fetch("/api/tasks");
     const data = await res.json();
     setTasks(data);
-    console.log("Data", data);
   };
+
   useEffect(() => {
     fetchTasks();
   }, []);
@@ -31,7 +32,6 @@ const AddTask = () => {
           "Content-Type": "application/json",
         },
       });
-
       fetchTasks();
       setEditTaskId(null);
     } else {
@@ -64,7 +64,6 @@ const AddTask = () => {
     });
 
     fetchTasks();
-    // setTasks(mainTasks.filter((task) => task.id !== id));
   };
 
   const editTask = (task) => {
@@ -72,70 +71,61 @@ const AddTask = () => {
     setTitle(task.title);
     setDescription(task.description);
   };
-  console.log("Edit task", mainTasks);
+
   return (
-    <div className=" gap-2 p-5">
-      <form onSubmit={submitHandler} className="mb-5" >
+    <div className="max-w-4xl mx-auto p-5">
+      <form onSubmit={submitHandler} className="mb-5 flex flex-wrap gap-3">
         <input
           type="text"
-          className="border-2 px-3 py-2 mr-3 w-64 bg-gray-300"
+          className="border-2 px-3 py-2 w-full sm:w-64 bg-gray-300 rounded-md"
           placeholder="Enter Task Title"
           value={title}
-          onChange={(e) => setTitle(e.target.value)} required
+          onChange={(e) => setTitle(e.target.value)}
+          required
         />
         <input
           type="text"
-          className="border-2 px-3 py-2 mr-3 w-64  bg-gray-300"
+          className="border-2 px-3 py-2 w-full sm:w-64 bg-gray-300 rounded-md"
           placeholder="Enter Description"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           required
         />
-        <button className="bg-gray-700 text-white px-4 py-2 font-bold rounded-sm cursor-pointer">
+        <button className="bg-gray-700 text-white px-4 py-2 rounded-md font-bold w-full sm:w-auto">
           {editTaskId !== null ? "Update Task" : "Add Task"}
         </button>
       </form>
 
-      <div className="bg-gray-500 p-5 rounded-lg text-amber-50">
+      <div className="bg-gray-500 p-5 rounded-lg text-amber-50 overflow-x-auto">
         {mainTasks.length > 0 ? (
-          <table className="w-full border-collapse border border-gray-400">
+          <table className="w-full border-collapse border border-gray-400 text-xs sm:text-sm">
             <thead>
               <tr className="bg-gray-700 text-white">
-                <th className="border border-gray-400 px-4 py-2 text-center">
-                  Title
-                </th>
-                <th className="border border-gray-400 px-4 py-2 text-center">
-                  Description
-                </th>
-                <th className="border border-gray-400 px-4 py-2 text-center">
-                  Action
-                </th>
+                <th className="border border-gray-400 px-4 py-2 text-center">Title</th>
+                <th className="border border-gray-400 px-4 py-2 text-center">Description</th>
+                <th className="border border-gray-400 px-4 py-2 text-center">Action</th>
               </tr>
             </thead>
             <tbody>
               {mainTasks.map((task, i) => (
                 <tr key={i} className="border border-gray-400">
-                  <td className="border border-gray-400 px-4 py-2">
-                    {task.title}
-                  </td>
-                  <td className="border border-gray-400 px-4 py-2">
-                    {task.description}
-                  </td>
-                  <td className="border border-gray-400 px-4 py-2 flex justify-center gap-2">
+                  <td className="border border-gray-400 px-4 py-2">{task.title}</td>
+                  <td className="border border-gray-400 px-4 py-2">{task.description}</td>
+                  <td className="border border-gray-400 px-4 py-2 flex justify-center gap-2 flex-wrap">
                     <button
-                      className="bg-blue-400 text-white px-3 py-1 rounded-sm cursor-pointer "
+                      className="bg-blue-400 text-white text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2 rounded-md"
                       onClick={() => router.push(`/tasks/${task._id}`)}
                     >
                       <MdRemoveRedEye />
                     </button>
                     <button
-                      className="bg-yellow-400 text-white px-3 py-1 rounded-sm cursor-pointer"
+                      className="bg-yellow-400 text-white text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2 rounded-md"
                       onClick={() => editTask(task)}
                     >
                       <MdEdit />
                     </button>
                     <button
-                      className="bg-red-400 text-white px-3 py-1 rounded-sm cursor-pointer"
+                      className="bg-red-400 text-white text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2 rounded-md"
                       onClick={() => deleteTask(task._id)}
                     >
                       <MdDelete />
@@ -146,9 +136,7 @@ const AddTask = () => {
             </tbody>
           </table>
         ) : (
-          <h2 className="text-center text-lg font-semibold">
-            No Task Available
-          </h2>
+          <h2 className="text-center text-lg font-semibold">No Task Available</h2>
         )}
       </div>
     </div>
