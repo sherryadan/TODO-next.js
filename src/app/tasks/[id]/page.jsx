@@ -25,14 +25,15 @@ const TaskDetails = () => {
 
   if (!task) {
     return (
-      <div className="flex justify-center items-center min-h-screen min-w-screen bg-gray-100">
-        <h2 className="text-xl font-semibold animate-pulse">Loading...</h2>
+      <div className="flex justify-center items-center min-h-screen min-w-screen bg-#dae1ea">
+        <div className="bg-gray-300 shadow-xl rounded-xl p-6 w-full max-w-lg text-center">
+        <h2 className="text-xl font-semibold animate-pulse">Loading...</h2></div>
       </div>
     );
   }
 
   return (
-    <div className="flex justify-center items-center  min-w-screen bg-#dae1ea ">
+    <div className="flex justify-center items-center min-h-screen min-w-screen bg-#dae1ea ">
       <div className="bg-gray-300 shadow-xl rounded-xl p-6 w-full max-w-lg text-center">
         <h1 className="text-3xl font-bold text-gray-800 mb-6">Task Details</h1>
 
@@ -41,7 +42,9 @@ const TaskDetails = () => {
         </div>
 
         <div className=" text-black p-4 rounded-lg shadow-md mb-6 text-left capitalize">
-          <p className="text-lg">Description: {task.description}</p>
+          <p className="text-m ">
+            Description: <span className="text-sm"> {task.description}</span>
+          </p>
         </div>
 
         <button
