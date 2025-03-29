@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import { MdDelete, MdEdit, MdRemoveRedEye } from "react-icons/md";
 import { ImSpinner6 } from "react-icons/im";
 import { useRouter } from "next/navigation";
-import Form from "./Form";
 
 const AddTask = () => {
   const router = useRouter();
@@ -220,7 +219,7 @@ const AddTask = () => {
       </div>
       <button
         onClick={() => router.push("/signup")}
-        className="mt-4 bg-blue-600 text-white px-4 py-2 rounded"
+        className="mt-4 bg-blue-600 text-white px-4 py-2 rounded cursor-pointer hover:bg-blue-950"
       >
         Sign Up
       </button>
