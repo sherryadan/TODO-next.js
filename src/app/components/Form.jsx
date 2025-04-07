@@ -245,14 +245,14 @@ const Form = () => {
           />
           <p className="text-red-500 text-xs">{errors.confirmPassword}</p>
         </div>
-
-        <button className="w-full bg-blue-600 text-white py-3 rounded text-lg">
+ 
+        <button className="w-full bg-gray-700 text-white py-3 rounded text-lg cursor-pointer hover:bg-gray-950">
           Submit
         </button>
       
       </form>
       <button
-          className="w-full bg-blue-600 text-white py-3 rounded text-lg gap-2 mt-2"
+          className="w-full bg-gray-700 text-white py-3 rounded text-lg gap-2 mt-2 cursor-pointer hover:bg-gray-950"
           onClick={() => router.push("/")}
         >
           Back

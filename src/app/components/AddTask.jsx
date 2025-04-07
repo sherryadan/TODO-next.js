@@ -148,7 +148,7 @@ const AddTask = () => {
 
         <button
           type="submit"
-          className="bg-gray-700 text-white px-4 rounded-md font-bold py-2 h-[42px]"
+          className="bg-gray-700 text-white px-4 rounded-md font-bold py-2 h-[42px]  hover:bg-gray-950 cursor-pointer"
         >
           {editTaskId !== null ? "Update Task" : "Add Task"}
         </button>
@@ -180,7 +180,7 @@ const AddTask = () => {
                   <td className="border border-gray-400 px-4 py-2 text-center">
                     {task.title}
                   </td>
-                  <td className="border border-gray-400 px-4 py-2 text-center relative group">
+                  <td className="border border-gray-400 px-4 py-2 text-center relative group cursor-pointer">
                     <span>{truncateDescription(task.description)}</span>
                     <div className="absolute left-1/2 transform -translate-x-1/2 bottom-full mb-2 hidden group-hover:block bg-gray-200 text-black text-xs rounded-md p-2 w-48 shadow-md">
                       {task.description}
@@ -219,7 +219,7 @@ const AddTask = () => {
       </div>
       <button
         onClick={() => router.push("/signup")}
-        className="mt-4 bg-blue-600 text-white px-4 py-2 rounded cursor-pointer hover:bg-blue-950"
+        className="mt-4 bg-gray-700 text-white px-4 py-2 rounded cursor-pointer hover:bg-gray-950"
       >
         Sign Up
       </button>

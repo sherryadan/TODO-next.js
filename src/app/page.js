@@ -1,5 +1,4 @@
 import AddTask from "./components/AddTask";
-import Form from "./components/Form";
 import "./globals.css";
 
 export default function Home() {
