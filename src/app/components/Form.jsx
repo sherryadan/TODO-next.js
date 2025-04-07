@@ -85,10 +85,7 @@ const Form = () => {
       isValid = false;
     }
 
-    if (!formData.termsAccepted) {
-      newErrors.termsAccepted = "You must accept the terms and conditions";
-      isValid = false;
-    }
+
 
     setErrors(newErrors);
     return isValid;

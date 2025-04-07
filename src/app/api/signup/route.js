@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import connectionToDatabase from "../../../../lib/mongoosedb";
 import User from "../../../../models/User";
+import bcrypt from "bcryptjs";
 
 export async function POST(request) {
   console.log("API hit");
@@ -29,6 +30,7 @@ export async function POST(request) {
         { status: 400 }
       );
     }
+    const hashedPassword = await bcrypt.hash(password, 10);
 
     const newUser = new User({
       firstName,
@@ -38,7 +40,7 @@ export async function POST(request) {
       website,
       visitors,
       email,
-      password,
+      password: hashedPassword,
     });
 
     await newUser.save();
