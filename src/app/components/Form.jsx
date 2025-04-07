@@ -118,13 +118,13 @@ const Form = () => {
   };
 
   return (
-    <div className="max-w-lg mx-auto p-5 bg-white shadow-md rounded-md">
+    <div className="max-w-lg mx-auto p-5 bg-gray-300 shadow-xl rounded-md">
       <form className="space-y-4" onSubmit={handleSubmit}>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 ">
+          <div> 
             <label>First Name</label>
             <input
-              className="w-full p-3 border rounded"
+              className="w-full p-3 border rounded bg-gray-100"
               placeholder="Enter First Name"
               value={formData.firstName}
               onChange={(e) =>
@@ -136,7 +136,7 @@ const Form = () => {
           <div>
             <label>Last Name</label>
             <input
-              className="w-full p-3 border rounded"
+              className="w-full p-3 border rounded bg-gray-100"
               placeholder="Enter Last Name"
               value={formData.lastName}
               onChange={(e) =>
@@ -150,7 +150,7 @@ const Form = () => {
         <div>
           <label>Company</label>
           <input
-            className="w-full p-3 border rounded"
+            className="w-full p-3 border rounded bg-gray-100"
             placeholder="Enter Company Name"
             value={formData.company}
             onChange={(e) =>
@@ -163,7 +163,7 @@ const Form = () => {
         <div>
           <label>Phone Number</label>
           <input
-            className="w-full p-3 border rounded"
+            className="w-full p-3 border rounded bg-gray-100"
             placeholder="+92xxxxxxxxxx"
             value={formData.phone}
             onChange={(e) =>
@@ -176,7 +176,7 @@ const Form = () => {
         <div>
           <label>Website URL</label>
           <input
-            className="w-full p-3 border rounded"
+            className="w-full p-3 border rounded bg-gray-100"
             placeholder="Enter URL"
             value={formData.website}
             onChange={(e) =>
@@ -189,7 +189,7 @@ const Form = () => {
         <div>
           <label>Unique Visitors (Per Month)</label>
           <select
-            className="w-full p-3 border rounded"
+            className="w-full p-3 border rounded bg-gray-100"
             value={formData.visitors}
             onChange={(e) =>
               setFormData({ ...formData, visitors: e.target.value })
@@ -206,7 +206,7 @@ const Form = () => {
         <div>
           <label>Email</label>
           <input
-            className="w-full p-3 border rounded"
+            className="w-full p-3 border rounded bg-gray-100"
             placeholder="user@company.com"
             value={formData.email}
             onChange={(e) =>
@@ -220,7 +220,7 @@ const Form = () => {
           <label>Password</label>
           <input
             type="password"
-            className="w-full p-3 border rounded"
+            className="w-full p-3 border rounded bg-gray-100"
             placeholder="Enter Password"
             value={formData.password}
             onChange={(e) =>
@@ -234,7 +234,7 @@ const Form = () => {
           <label>Confirm Password</label>
           <input
             type="password"
-            className="w-full p-3 border rounded"
+            className="w-full p-3 border rounded bg-gray-100"
             placeholder="Re-enter Password"
             value={formData.confirmPassword}
             onChange={(e) =>
@@ -250,10 +250,9 @@ const Form = () => {
       
       </form>
       <button
-          className="flex items-center justify-center gap-2 bg-green-800 text-white px-5 py-3 rounded-lg font-semibold hover:bg-green-950 transition duration-200 mx-auto cursor-pointer"
+          className="w-full bg-blue-600 text-white py-3 rounded text-lg gap-2 mt-2"
           onClick={() => router.push("/")}
         >
-          <IoArrowBackCircle size={24} />
           Back
         </button>
     </div>
