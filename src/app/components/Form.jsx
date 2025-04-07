@@ -1,6 +1,5 @@
 "use client";
 import React, { useState } from "react";
-import { IoArrowBackCircle } from "react-icons/io5";
 import { useRouter } from "next/navigation";
 const Form = () => {
       const router = useRouter();
@@ -96,26 +95,42 @@ const Form = () => {
     return isValid;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (validateForm()) {
-      alert("Form submitted successfully!");
-      console.log("Form Data:", formData);
-      setFormData({
-        firstName: "",
-        lastName: "",
-        company: "",
-        phone: "",
-        website: "",
-        visitors: "",
-        email: "",
-        password: "",
-        confirmPassword: "",
-        termsAccepted: false,
-      });
-      setErrors({});
+      try {
+        const res = await fetch("/api/signup", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(formData),
+        });
+  
+        const result = await res.json();
+  
+        if (res.ok) {
+          alert(result.message);
+          setFormData({
+            firstName: "",
+            lastName: "",
+            company: "",
+            phone: "",
+            website: "",
+            visitors: "",
+            email: "",
+            password: "",
+            confirmPassword: "",
+            termsAccepted: false,
+          });
+          setErrors({});
+        } else {
+          alert(result.message);
+        }
+      } catch (error) {
+        console.log("Error:", error);
+      }
     }
   };
+  
 
   return (
   <div>
