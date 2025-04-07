@@ -1,9 +1,10 @@
-// /app/api/signup/route.js
 import { NextResponse } from "next/server";
 import connectionToDatabase from "../../../../lib/mongoosedb";
-import User from "../models/user";
+import User from "../../../../models/User";
 
 export async function POST(request) {
+  console.log("API hit");
+
   await connectionToDatabase();
 
   try {
@@ -20,8 +21,8 @@ export async function POST(request) {
       password,
     } = data;
 
-    // Check if email already exists
     const existingUser = await User.findOne({ email });
+
     if (existingUser) {
       return NextResponse.json(
         { message: "Email already registered!" },
@@ -47,7 +48,7 @@ export async function POST(request) {
       { status: 201 }
     );
   } catch (error) {
-    console.log("Error:", error);
+    console.error("Error:", error);
     return NextResponse.json(
       { message: "Something went wrong!" },
       { status: 500 }

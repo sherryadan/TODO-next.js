@@ -99,7 +99,7 @@ const Form = () => {
     e.preventDefault();
     if (validateForm()) {
       try {
-        const res = await fetch("/api/signup", {
+        const res = await fetch("/api/signup", { 
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(formData),
@@ -126,10 +126,11 @@ const Form = () => {
           alert(result.message);
         }
       } catch (error) {
-        console.log("Error:", error);
+        console.error("Error:", error);
       }
     }
   };
+  
   
 
   return (
@@ -272,7 +273,10 @@ const Form = () => {
         >
           Back
         </button>
+        <p className="text-center">
+          If you Already Have an acoount then LOGIN </p>
     </div>
+    
     </div>
   );
 };
