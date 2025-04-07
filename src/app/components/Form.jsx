@@ -118,6 +118,8 @@ const Form = () => {
   };
 
   return (
+  <div>
+    <h1 className="text-3xl font-bold mb-6 mt-4 text-center">Sign Up</h1>
     <div className="max-w-lg mx-auto p-5 bg-gray-300 shadow-xl rounded-md">
       <form className="space-y-4" onSubmit={handleSubmit}>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 ">
@@ -255,6 +257,7 @@ const Form = () => {
         >
           Back
         </button>
+    </div>
     </div>
   );
 };
