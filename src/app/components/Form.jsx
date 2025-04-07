@@ -2,8 +2,7 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 const Form = () => { 
-      const router = useRouter();
-    
+      const router = useRouter();  
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
