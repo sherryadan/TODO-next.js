@@ -37,14 +37,23 @@ const Login = () => {
     e.preventDefault();
     if (validateForm()) {
       try {
-        const res = await fetch("/api/login", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(formData),
+        const query = new URLSearchParams({
+          email: formData.email,
+          password: formData.password,
+        }).toString();
+
+        const res = await fetch(`/api/login?${query}`, {
+          method: "GET",
         });
-
-        const result = await res.json();
-
+        let result;
+        try {
+          result = await res.json();
+        } catch (error) {
+          console.error("Failed to parse JSON:", error);
+          alert("Unexpected server response. Please try again.");
+          return;
+        }
+  
         if (res.ok) {
           alert(result.message);
           setFormData({
@@ -54,10 +63,14 @@ const Login = () => {
           setErrors({});
           router.push("/");
         } else {
-          alert(result.message);
+          setErrors((prevErrors) => ({
+            ...prevErrors,
+            password: result.message,
+          }));
         }
       } catch (error) {
         console.error("Error:", error);
+        alert("An error occurred. Please try again.");
       }
     }
   };

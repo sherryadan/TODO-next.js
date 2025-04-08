@@ -4,8 +4,6 @@ import User from "../../../../models/User";
 import bcrypt from "bcryptjs";
 
 export async function POST(request) {
-  console.log("API hit");
-
   await connectionToDatabase();
 
   try {
