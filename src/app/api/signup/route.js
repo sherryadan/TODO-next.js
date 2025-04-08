@@ -17,7 +17,6 @@ export async function POST(request) {
       company,
       phone,
       website,
-      visitors,
       email,
       password,
     } = data;
@@ -38,7 +37,6 @@ export async function POST(request) {
       company,
       phone,
       website,
-      visitors,
       email,
       password: hashedPassword,
     });

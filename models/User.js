@@ -6,7 +6,6 @@ const userSchema = new mongoose.Schema({
   company: { type: String },
   phone: { type: String },
   website: { type: String },
-  visitors: { type: Number},
   email: { type: String },
   password: { type: String },
 }, { collection: "users" });
@@ -14,3 +13,4 @@ const userSchema = new mongoose.Schema({
 const User = mongoose.models.User || mongoose.model("User", userSchema);
 
 export default User;
+ 

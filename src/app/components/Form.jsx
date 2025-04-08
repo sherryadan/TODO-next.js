@@ -1,15 +1,14 @@
 "use client";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-const Form = () => { 
-      const router = useRouter();  
+const Form = () => {
+  const router = useRouter();
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
     company: "",
     phone: "",
     website: "",
-    visitors: "",
     email: "",
     password: "",
     confirmPassword: "",
@@ -61,11 +60,6 @@ const Form = () => {
       isValid = false;
     }
 
-    if (!formData.visitors) {
-      newErrors.visitors = "Please select an option";
-      isValid = false;
-    }
-
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!formData.email.trim()) {
       newErrors.email = "Email is required";
@@ -85,8 +79,6 @@ const Form = () => {
       isValid = false;
     }
 
-
-
     setErrors(newErrors);
     return isValid;
   };
@@ -95,14 +87,14 @@ const Form = () => {
     e.preventDefault();
     if (validateForm()) {
       try {
-        const res = await fetch("/api/signup", { 
+        const res = await fetch("/api/signup", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(formData),
         });
-  
+
         const result = await res.json();
-  
+
         if (res.ok) {
           alert(result.message);
           setFormData({
@@ -111,7 +103,6 @@ const Form = () => {
             company: "",
             phone: "",
             website: "",
-            visitors: "",
             email: "",
             password: "",
             confirmPassword: "",
@@ -126,153 +117,165 @@ const Form = () => {
       }
     }
   };
-  
-  
 
   return (
-  <div>
-    <h1 className="text-3xl font-bold mb-6 mt-4 text-center">Sign Up</h1>
-    <div className="max-w-lg mx-auto p-5 bg-gray-300 shadow-xl rounded-md">
-      <form className="space-y-4" onSubmit={handleSubmit}>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 ">
-          <div> 
-            <label>First Name</label>
-            <input
-              className="w-full p-3 border rounded bg-gray-100"
-              placeholder="Enter First Name"
-              value={formData.firstName}
-              onChange={(e) =>
-                setFormData({ ...formData, firstName: e.target.value })
-              }
-            />
-            <p className="text-red-500 text-xs">{errors.firstName}</p>
+    <div>
+      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-lg mb-5">
+        <h1 className="text-2xl font-bold text-center mb-4">
+          Create an account
+        </h1>
+        <form className="space-y-4" onSubmit={handleSubmit}>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 ">
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                First Name
+              </label>
+              <input
+                type="text"
+                className="mt-1 h-9 block w-full p-3 border border-gray-300 rounded-sm shadow-sm focus:outline-0"
+                placeholder="Enter your first name"
+                value={formData.firstName}
+                onChange={(e) =>
+                  setFormData({ ...formData, firstName: e.target.value })
+                }
+              />
+              <p className="text-red-500 text-xs mt-1">{errors.firstName}</p>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                Last Name
+              </label>
+              <input
+                type="text"
+                className="mt-1 h-9 block w-full p-3 border border-gray-300 rounded-sm shadow-sm focus:outline-0"
+                placeholder="Enter your last name"
+                value={formData.lastName}
+                onChange={(e) =>
+                  setFormData({ ...formData, lastName: e.target.value })
+                }
+              />
+              <p className="text-red-500 text-xs mt-1">{errors.lastName}</p>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 ">
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                Company
+              </label>
+              <input
+                type="text"
+                className="mt-1 h-9 block w-full p-3 border border-gray-300 rounded-sm shadow-sm focus:outline-0"
+                placeholder="Enter your company name"
+                value={formData.company}
+                onChange={(e) =>
+                  setFormData({ ...formData, company: e.target.value })
+                }
+              />
+              <p className="text-red-500 text-xs mt-1">{errors.company}</p>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                Phone
+              </label>
+              <input
+                type="text"
+                className="mt-1 h-9 block w-full p-3 border border-gray-300 rounded-sm shadow-sm focus:outline-0"
+                placeholder="Enter your phone number"
+                value={formData.phone}
+                onChange={(e) =>
+                  setFormData({ ...formData, phone: e.target.value })
+                }
+              />
+              <p className="text-red-500 text-xs mt-1">{errors.phone}</p>
+            </div>
           </div>
           <div>
-            <label>Last Name</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Website
+            </label>
             <input
-              className="w-full p-3 border rounded bg-gray-100"
-              placeholder="Enter Last Name"
-              value={formData.lastName}
+              type="text"
+              className="mt-1 h-9 block w-full p-3 border border-gray-300 rounded-sm shadow-sm focus:outline-0"
+              placeholder="Enter your website URL"
+              value={formData.website}
               onChange={(e) =>
-                setFormData({ ...formData, lastName: e.target.value })
+                setFormData({ ...formData, website: e.target.value })
               }
             />
-            <p className="text-red-500 text-xs">{errors.lastName}</p>
+            <p className="text-red-500 text-xs mt-1">{errors.website}</p>
           </div>
-        </div>
 
-        <div>
-          <label>Company</label>
-          <input
-            className="w-full p-3 border rounded bg-gray-100"
-            placeholder="Enter Company Name"
-            value={formData.company}
-            onChange={(e) =>
-              setFormData({ ...formData, company: e.target.value })
-            }
-          />
-          <p className="text-red-500 text-xs">{errors.company}</p>
-        </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Email
+            </label>
+            <input
+              type="email"
+              className="mt-1 h-9 block w-full p-3 border border-gray-300 rounded-sm shadow-sm focus:outline-0"
+              placeholder="Enter your email"
+              value={formData.email}
+              onChange={(e) =>
+                setFormData({ ...formData, email: e.target.value })
+              }
+            />
+            <p className="text-red-500 text-xs mt-1">{errors.email}</p>
+          </div>
 
-        <div>
-          <label>Phone Number</label>
-          <input
-            className="w-full p-3 border rounded bg-gray-100"
-            placeholder="+92xxxxxxxxxx"
-            value={formData.phone}
-            onChange={(e) =>
-              setFormData({ ...formData, phone: e.target.value })
-            }
-          />
-          <p className="text-red-500 text-xs">{errors.phone}</p>
-        </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Password
+            </label>
+            <input
+              type="password"
+              className="mt-1 h-9 block w-full p-3 border border-gray-300 rounded-sm shadow-sm focus:outline-0"
+              placeholder="Enter your password"
+              value={formData.password}
+              onChange={(e) =>
+                setFormData({ ...formData, password: e.target.value })
+              }
+            />
+            <p className="text-red-500 text-xs mt-1">{errors.password}</p>
+          </div>
 
-        <div>
-          <label>Website URL</label>
-          <input
-            className="w-full p-3 border rounded bg-gray-100"
-            placeholder="Enter URL"
-            value={formData.website}
-            onChange={(e) =>
-              setFormData({ ...formData, website: e.target.value })
-            }
-          />
-          <p className="text-red-500 text-xs">{errors.website}</p>
-        </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Confirm Password
+            </label>
+            <input
+              type="password"
+              className="mt-1 h-9 block w-full p-3 border border-gray-300 rounded-sm shadow-sm focus:outline-0"
+              placeholder="Re-enter your password"
+              value={formData.confirmPassword}
+              onChange={(e) =>
+                setFormData({ ...formData, confirmPassword: e.target.value })
+              }
+            />
+            <p className="text-red-500 text-xs mt-1">
+              {errors.confirmPassword}
+            </p>
+          </div>
 
-        <div>
-          <label>Unique Visitors (Per Month)</label>
-          <select
-            className="w-full p-3 border rounded bg-gray-100"
-            value={formData.visitors}
-            onChange={(e) =>
-              setFormData({ ...formData, visitors: e.target.value })
-            }
-          >
-            <option value="">Choose monthly visitors</option>
-            <option>0 - 1,000</option>
-            <option>1,000 - 5,000</option>
-            <option>5,000+</option>
-          </select>
-          <p className="text-red-500 text-xs">{errors.visitors}</p>
-        </div>
+          <div className="flex justify-end gap-2">
+            <button
+              type="submit"
+              className="w-20 h-10 bg-black text-white rounded-sm text-sm font-medium hover:bg-gray-800"
+            >
+              SignUp
+            </button>
+            <button
+              className="w-20 h-10 bg-black text-white rounded-sm text-sm font-medium hover:bg-gray-800"
+              onClick={() => router.push("/")}
+            >
+              Back
+            </button>
+          </div>
+        </form>
 
-        <div>
-          <label>Email</label>
-          <input
-            className="w-full p-3 border rounded bg-gray-100"
-            placeholder="user@company.com"
-            value={formData.email}
-            onChange={(e) =>
-              setFormData({ ...formData, email: e.target.value })
-            }
-          />
-          <p className="text-red-500 text-xs">{errors.email}</p>
-        </div>
-
-        <div>
-          <label>Password</label>
-          <input
-            type="password"
-            className="w-full p-3 border rounded bg-gray-100"
-            placeholder="Enter Password"
-            value={formData.password}
-            onChange={(e) =>
-              setFormData({ ...formData, password: e.target.value })
-            }
-          />
-          <p className="text-red-500 text-xs">{errors.password}</p>
-        </div>
-
-        <div>
-          <label>Confirm Password</label>
-          <input
-            type="password"
-            className="w-full p-3 border rounded bg-gray-100"
-            placeholder="Re-enter Password"
-            value={formData.confirmPassword}
-            onChange={(e) =>
-              setFormData({ ...formData, confirmPassword: e.target.value })
-            }
-          />
-          <p className="text-red-500 text-xs">{errors.confirmPassword}</p>
-        </div>
- 
-        <button className="w-full bg-gray-700 text-white py-3 rounded text-lg cursor-pointer hover:bg-gray-950">
-          Submit
-        </button>
-      
-      </form>
-      <button
-          className="w-full bg-gray-700 text-white py-3 rounded text-lg gap-2 mt-2 cursor-pointer hover:bg-gray-950"
-          onClick={() => router.push("/")}
-        >
-          Back
-        </button>
-        <p className="text-center">
-          If you Already Have an acoount then LOGIN </p>
-    </div>
-    
+        <p className="text-center mt-2 text-xs">
+          If you Already Have an account then LOGIN{" "}
+        </p>
+      </div>
     </div>
   );
 };
