@@ -2,14 +2,20 @@ import { NextResponse } from "next/server";
 import connectionToDatabase from "../../../../lib/mongoosedb";
 import User from "../../../../models/User";
 import bcrypt from "bcryptjs";
+import { generateToken } from "../../../../lib/auth";
 
-export async function GET(request) {
+export async function POST(request) {
   await connectionToDatabase();
 
   try {
-    const { searchParams } = new URL(request.url);
-    const email = searchParams.get("email");
-    const password = searchParams.get("password");
+    const body = await request.json().catch(() => null); // Catch invalid JSON
+    if (!body) {
+      return NextResponse.json(
+        { message: "Invalid JSON input!" },
+        { status: 400 }
+      );
+    }
+    const { email, password } = await request.json();
 
     if (!email || !password) {
       return NextResponse.json(
@@ -34,10 +40,19 @@ export async function GET(request) {
       );
     }
 
-    return NextResponse.json(
+    const token = generateToken({ id: user._id, email: user.email });
+
+    const response = NextResponse.json(
       { message: "Login successful!" },
       { status: 200 }
     );
+    response.cookies.set("authToken", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 60 * 60,
+    });
+
+    return response;
   } catch (error) {
     console.error("Error in login API:", error);
     return NextResponse.json(
