@@ -37,14 +37,17 @@ const Login = () => {
     e.preventDefault();
     if (validateForm()) {
       try {
-        const query = new URLSearchParams({
-          email: formData.email,
-          password: formData.password,
-        }).toString();
-
-        const res = await fetch(`/api/login?${query}`, {
-          method: "GET",
+        const res = await fetch(`/api/login`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: formData.email,
+            password: formData.password,
+          }),
         });
+  
         let result;
         try {
           result = await res.json();
@@ -74,6 +77,7 @@ const Login = () => {
       }
     }
   };
+
 
   return (
     <div>

@@ -8,14 +8,14 @@ export async function POST(request) {
   await connectionToDatabase();
 
   try {
-    const body = await request.json().catch(() => null); // Catch invalid JSON
+    const body = await request.json().catch(() => null);
     if (!body) {
       return NextResponse.json(
         { message: "Invalid JSON input!" },
         { status: 400 }
       );
     }
-    const { email, password } = await request.json();
+    const { email, password } = body;
 
     if (!email || !password) {
       return NextResponse.json(

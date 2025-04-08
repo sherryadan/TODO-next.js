@@ -1,14 +1,13 @@
 import { NextResponse } from "next/server";
-import { verifyToken } from "../../lib/auth";
+import { verifyToken } from "../lib/auth";
 
 export function middleware(req) {
-  const token = req.cookies.get("authToken");
+  const tokenCookie = req.cookies.get("authToken");
+  const token = tokenCookie?.value;
+  // console.log("Token from cookie:", token);
 
   if (!token) {
-    return NextResponse.json(
-      { error: "Unauthorized: No token provided" },
-      { status: 401 }
-    );
+    return NextResponse.redirect(new URL("/login", req.url));
   }
 
   try {
@@ -23,5 +22,6 @@ export function middleware(req) {
 }
 
 export const config = {
-  matcher: ["/api/tasks/:path*"], 
+    runtime: 'nodejs',
+  matcher: ["/:path*"], 
 };
