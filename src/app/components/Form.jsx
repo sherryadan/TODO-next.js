@@ -272,8 +272,14 @@ const Form = () => {
           </div>
         </form>
 
-        <p className=" mt-2 text-xs">
-          If you Already Have an account then LOGIN{" "}
+        <p className="mt-2 text-xs">
+          Already have an account?{" "}
+          <span
+            className="text-blue-500 cursor-pointer"
+            onClick={() => router.push("/login")}
+          >
+            Login
+          </span>
         </p>
       </div>
     </div>

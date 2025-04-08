@@ -217,11 +217,20 @@ const AddTask = () => {
         )}
        
       </div>
+      
+      
       <button
         onClick={() => router.push("/signup")}
-        className="mt-4 bg-gray-700 text-white px-4 py-2 rounded cursor-pointer hover:bg-gray-950"
+        className="mt-4 bg-gray-700 text-white px-3 py-2 rounded cursor-pointer hover:bg-gray-950"
       >
         Sign Up
+      </button>
+      <button
+        onClick={() => router.push("/login")}
+        type="submit"
+        className="mt-4 bg-gray-700 text-white px-4 ml-2 py-2 rounded cursor-pointer hover:bg-gray-950"
+      >
+        Login
       </button>
     </div>
   );
