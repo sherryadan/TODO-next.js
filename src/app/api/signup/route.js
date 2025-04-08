@@ -11,15 +11,8 @@ export async function POST(request) {
   try {
     const data = await request.json();
 
-    const {
-      firstName,
-      lastName,
-      company,
-      phone,
-      website,
-      email,
-      password,
-    } = data;
+    const { firstName, lastName, company, phone, website, email, password } =
+      data;
 
     const existingUser = await User.findOne({ email });
 

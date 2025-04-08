@@ -272,7 +272,7 @@ const Form = () => {
           </div>
         </form>
 
-        <p className="text-center mt-2 text-xs">
+        <p className=" mt-2 text-xs">
           If you Already Have an account then LOGIN{" "}
         </p>
       </div>
