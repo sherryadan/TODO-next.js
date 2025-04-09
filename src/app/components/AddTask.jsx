@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { MdDelete, MdEdit, MdRemoveRedEye } from "react-icons/md";
 import { ImSpinner6 } from "react-icons/im";
 import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
 
 const AddTask = () => {
   const router = useRouter();
@@ -154,14 +155,16 @@ const AddTask = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-5 mt-10">
-      <h1 className="text-3xl font-bold mb-4 text-center">Task Manager</h1>
+    <div className={`max-w-4xl mx-auto p-5 mt-10` }>
+      <h1 className="text-3xl font-bold mb-4 text-center text-gray-400">
+        Task Manager
+      </h1>
 
       <form onSubmit={submitHandler} className="mb-5 flex flex-wrap gap-3">
         <div className="w-full sm:w-64">
           <input
             type="text"
-            className="border-2 px-3 py-2 w-full bg-gray-300 rounded-md"
+            className="border-1 px-3 py-2 w-full border-violet-800 placeholder-gray-500 text-gray-400 rounded-md"
             placeholder="Enter Task Title"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
@@ -174,7 +177,7 @@ const AddTask = () => {
         <div className="w-full sm:w-64">
           <input
             type="text"
-            className="border-2 px-3 py-2 w-full bg-gray-300 rounded-md"
+            className="border-1 px-3 py-2 w-full border-violet-800 placeholder-gray-500 text-gray-400 rounded-md"
             placeholder="Enter Description"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
@@ -186,28 +189,28 @@ const AddTask = () => {
 
         <button
           type="submit"
-          className="bg-gray-700 text-white px-4 rounded-md font-bold py-2 h-[42px]  hover:bg-gray-950 cursor-pointer"
+          className="bg-[#100224] text-gray-300 px-4 rounded-md font-bold py-2 h-[42px]  hover:bg-violet-500 cursor-pointer"
         >
           {editTaskId !== null ? "Update Task" : "Add Task"}
         </button>
       </form>
 
-      <div className="bg-gray-500 p-5 rounded-lg text-amber-50 overflow-x-auto">
+      <div className=" p-2 rounded-lg text-amber-50 overflow-x-auto ">
         {loading ? (
           <h2 className="text-center text-lg font-semibold flex items-center justify-center">
             <ImSpinner6 className="animate-spin text-2xl mr-2" />
           </h2>
         ) : mainTasks.length > 0 ? (
-          <table className="w-full border-collapse border border-gray-400 text-xs sm:text-sm">
+          <table className="w-full border-collapse border border-gray-300 text-xs sm:text-sm">
             <thead>
-              <tr className="bg-gray-700 text-white">
-                <th className="border border-gray-400 px-4 py-2 text-center">
+              <tr className="bg-violet-400 text-gray-800">
+                <th className=" border-gray-400 px-4 py-2 text-center">
                   Title
                 </th>
-                <th className="border border-gray-400 px-4 py-2 text-center">
+                <th className=" border-gray-400 px-4 py-2 text-center">
                   Description
                 </th>
-                <th className="border border-gray-400 px-4 py-2 text-center">
+                <th className="border-gray-400 px-4 py-2 text-center">
                   Action
                 </th>
               </tr>
@@ -215,30 +218,30 @@ const AddTask = () => {
             <tbody>
               {mainTasks.map((task, i) => (
                 <tr key={i} className="border border-gray-400">
-                  <td className="border border-gray-400 px-4 py-2 text-center">
+                  <td className="border border-gray-400 px-4 py-2 text-center text-violet-400 font-semibold">
                     {task.title}
                   </td>
-                  <td className="border border-gray-400 px-4 py-2 text-center relative group cursor-pointer">
+                  <td className="border border-gray-400 px-4 py-2 text-center relative group text-violet-400">
                     <span>{truncateDescription(task.description)}</span>
-                    <div className="absolute left-1/2 transform -translate-x-1/2 bottom-full mb-2 hidden group-hover:block bg-gray-200 text-black text-xs rounded-md p-2 w-48 shadow-md">
+                    {/* <div className="absolute left-1/2 transform -translate-x-1/2 bottom-full mb-2 hidden group-hover:block bg-gray-200 text-black text-xs rounded-md p-2 w-48 shadow-md">
                       {task.description}
-                    </div>
+                    </div> */}
                   </td>
                   <td className="px-4 py-2 flex justify-center gap-2 flex-wrap">
                     <button
-                      className="bg-blue-400 hover:bg-blue-600 text-white text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2 rounded-md cursor-pointer"
+                      className="bg-violet-400 hover:bg-violet-600 text-white text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2 rounded-md cursor-pointer"
                       onClick={() => router.push(`/tasks/${task._id}`)}
                     >
                       <MdRemoveRedEye />
                     </button>
                     <button
-                      className="bg-yellow-400 hover:bg-yellow-600 text-white text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2 rounded-md cursor-pointer"
+                      className="bg-violet-400 hover:bg-violet-600 text-white text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2 rounded-md cursor-pointer"
                       onClick={() => editTask(task)}
                     >
                       <MdEdit />
                     </button>
                     <button
-                      className="bg-red-400 hover:bg-red-600 text-white text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2 rounded-md cursor-pointer"
+                      className="bg-violet-400 hover:bg-violet-600 text-white text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2 rounded-md cursor-pointer"
                       onClick={() => deleteTask(task._id)}
                     >
                       <MdDelete />
@@ -255,7 +258,7 @@ const AddTask = () => {
         )}
       </div>
 
- {/* login and signup buttons  */}
+      {/* login and signup buttons  */}
       {/* <button
         onClick={() => router.push("/signup")}
         className="mt-4 bg-gray-700 text-white px-3 py-2 rounded cursor-pointer hover:bg-gray-950"
@@ -269,13 +272,14 @@ const AddTask = () => {
       >
         Login
       </button> */}
-      
-      <button 
-      onClick={handleLogout} 
-      type="submit"
-      className="mt-4 bg-gray-700 text-white px-4 ml-2 py-2 rounded cursor-pointer hover:bg-gray-950">
+
+      <Button
+        onClick={handleLogout}
+        type="submit"
+        className="bg-[#100224] text-gray-300 px-4 rounded-md font-bold py-2 h-[42px]  hover:bg-violet-500 cursor-pointer mt-4"
+      >
         Logout
-      </button>
+      </Button>
     </div>
   );
 };

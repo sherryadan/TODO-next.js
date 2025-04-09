@@ -81,16 +81,16 @@ const Login = () => {
 
   return (
     <div>
-      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-lg mb-5">
-        <h1 className="text-2xl font-bold text-center mb-4">Login</h1>
+      <div className="bg-[#2a0261] p-8 rounded-lg shadow-lg w-full max-w-lg mb-5">
+        <h1 className="text-2xl font-bold text-center text-gray-300 mb-4">Login</h1>
         <form className="space-y-4" onSubmit={handleSubmit}>
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-gray-300">
               Email
             </label>
             <input
               type="email"
-              className="mt-1 h-9 block w-full p-3 border border-gray-300 rounded-sm shadow-sm focus:outline-0"
+              className="mt-1 h-9 block w-full p-3 border text-gray-300 border-gray-300 rounded-sm shadow-sm focus:outline-0 placeholder-gray-600"
               placeholder="Enter your email"
               value={formData.email}
               onChange={(e) =>
@@ -101,12 +101,12 @@ const Login = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-gray-300">
               Password
             </label>
             <input
               type="password"
-              className="mt-1 h-9 block w-full p-3 border border-gray-300 rounded-sm shadow-sm focus:outline-0"
+              className="mt-1 h-9 block w-full p-3 border text-gray-300 border-gray-300 rounded-sm shadow-sm focus:outline-0 placeholder-gray-600"
               placeholder="Enter your password"
               value={formData.password}
               onChange={(e) =>
@@ -119,14 +119,14 @@ const Login = () => {
           <div className="flex justify-end gap-2">
             <button
               type="submit"
-              className="w-20 h-10 bg-black text-white rounded-sm text-sm font-medium hover:bg-gray-800"
+              className="bg-[#100224] text-white px-4 rounded-md font-bold h-9  hover:bg-violet-500 cursor-pointer"
             >
               Login
             </button>
           </div>
         </form>
 
-        <p className="mt-2 text-xs">
+        <p className="mt-2 text-xs text-gray-600">
           Don't have an account?{" "}
           <span
             className="text-blue-500 cursor-pointer"
