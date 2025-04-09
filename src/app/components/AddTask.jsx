@@ -189,7 +189,7 @@ const AddTask = () => {
 
         <button
           type="submit"
-          className="bg-[#100224] text-gray-300 px-4 rounded-md font-bold py-2 h-[42px]  hover:bg-violet-500 cursor-pointer"
+          className="bg-black text-gray-300 px-4 rounded-md font-bold py-2 h-[42px]  hover:bg-violet-500 cursor-pointer"
         >
           {editTaskId !== null ? "Update Task" : "Add Task"}
         </button>
@@ -276,7 +276,7 @@ const AddTask = () => {
       <Button
         onClick={handleLogout}
         type="submit"
-        className="bg-[#100224] text-gray-300 px-4 rounded-md font-bold py-2 h-[42px]  hover:bg-violet-500 cursor-pointer mt-4"
+        className="bg-black text-gray-300 px-4 rounded-md font-bold py-2 h-[42px]  hover:bg-violet-500 cursor-pointer mt-4"
       >
         Logout
       </Button>

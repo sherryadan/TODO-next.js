@@ -81,7 +81,7 @@ const Login = () => {
 
   return (
     <div>
-      <div className="bg-[#2a0261] p-8 rounded-lg shadow-lg w-full max-w-lg mb-5">
+      <div className="bg-[#100224] p-8 rounded-lg shadow-lg w-full max-w-lg mb-5">
         <h1 className="text-2xl font-bold text-center text-gray-300 mb-4">Login</h1>
         <form className="space-y-4" onSubmit={handleSubmit}>
           <div>
@@ -119,7 +119,7 @@ const Login = () => {
           <div className="flex justify-end gap-2">
             <button
               type="submit"
-              className="bg-[#100224] text-white px-4 rounded-md font-bold h-9  hover:bg-violet-500 cursor-pointer"
+              className="bg-black text-white px-4 rounded-md font-bold h-9  hover:bg-violet-500 cursor-pointer"
             >
               Login
             </button>

@@ -120,19 +120,19 @@ const Form = () => {
 
   return (
     <div>
-      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-lg mb-5">
-        <h1 className="text-2xl font-bold text-center mb-4">
+      <div className="bg-[#100224] p-8 rounded-lg shadow-lg w-full max-w-lg mb-5">
+        <h1 className="text-2xl font-bold text-center mb-4 text-gray-300">
           Create an account
         </h1>
         <form className="space-y-4" onSubmit={handleSubmit}>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 ">
             <div>
-              <label className="block text-sm font-medium text-gray-700">
+              <label className="block text-sm font-medium text-gray-300">
                 First Name
               </label>
               <input
                 type="text"
-                className="mt-1 h-9 block w-full p-3 border border-gray-300 rounded-sm shadow-sm focus:outline-0"
+                className="mt-1 h-9 block w-full p-3 border border-gray-300 rounded-sm shadow-sm focus:outline-0 placeholder-gray-600"
                 placeholder="Enter your first name"
                 value={formData.firstName}
                 onChange={(e) =>
@@ -142,12 +142,12 @@ const Form = () => {
               <p className="text-red-500 text-xs mt-1">{errors.firstName}</p>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">
+              <label className="block text-sm font-medium text-gray-300">
                 Last Name
               </label>
               <input
                 type="text"
-                className="mt-1 h-9 block w-full p-3 border border-gray-300 rounded-sm shadow-sm focus:outline-0"
+                className="mt-1 h-9 block w-full p-3 border border-gray-300 rounded-sm shadow-sm focus:outline-0 placeholder-gray-600"
                 placeholder="Enter your last name"
                 value={formData.lastName}
                 onChange={(e) =>
@@ -159,12 +159,12 @@ const Form = () => {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 ">
             <div>
-              <label className="block text-sm font-medium text-gray-700">
+              <label className="block text-sm font-medium text-gray-300">
                 Company
               </label>
               <input
                 type="text"
-                className="mt-1 h-9 block w-full p-3 border border-gray-300 rounded-sm shadow-sm focus:outline-0"
+                className="mt-1 h-9 block w-full p-3 border border-gray-300 rounded-sm shadow-sm focus:outline-0 placeholder-gray-600"
                 placeholder="Enter your company name"
                 value={formData.company}
                 onChange={(e) =>
@@ -175,12 +175,12 @@ const Form = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700">
+              <label className="block text-sm font-medium text-gray-300">
                 Phone
               </label>
               <input
                 type="text"
-                className="mt-1 h-9 block w-full p-3 border border-gray-300 rounded-sm shadow-sm focus:outline-0"
+                className="mt-1 h-9 block w-full p-3 border border-gray-300 rounded-sm shadow-sm focus:outline-0 placeholder-gray-600"
                 placeholder="Enter your phone number"
                 value={formData.phone}
                 onChange={(e) =>
@@ -191,12 +191,12 @@ const Form = () => {
             </div>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-gray-300">
               Website
             </label>
             <input
               type="text"
-              className="mt-1 h-9 block w-full p-3 border border-gray-300 rounded-sm shadow-sm focus:outline-0"
+              className="mt-1 h-9 block w-full p-3 border border-gray-300 rounded-sm shadow-sm focus:outline-0 placeholder-gray-600"
               placeholder="Enter your website URL"
               value={formData.website}
               onChange={(e) =>
@@ -207,12 +207,12 @@ const Form = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-gray-300">
               Email
             </label>
             <input
               type="email"
-              className="mt-1 h-9 block w-full p-3 border border-gray-300 rounded-sm shadow-sm focus:outline-0"
+              className="mt-1 h-9 block w-full p-3 border border-gray-300 rounded-sm shadow-sm focus:outline-0 placeholder-gray-600"
               placeholder="Enter your email"
               value={formData.email}
               onChange={(e) =>
@@ -223,12 +223,12 @@ const Form = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-gray-300">
               Password
             </label>
             <input
               type="password"
-              className="mt-1 h-9 block w-full p-3 border border-gray-300 rounded-sm shadow-sm focus:outline-0"
+              className="mt-1 h-9 block w-full p-3 border border-gray-300 rounded-sm shadow-sm focus:outline-0 placeholder-gray-600"
               placeholder="Enter your password"
               value={formData.password}
               onChange={(e) =>
@@ -239,12 +239,12 @@ const Form = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-gray-300">
               Confirm Password
             </label>
             <input
               type="password"
-              className="mt-1 h-9 block w-full p-3 border border-gray-300 rounded-sm shadow-sm focus:outline-0"
+              className="mt-1 h-9 block w-full p-3 border border-gray-300 rounded-sm shadow-sm focus:outline-0 placeholder-gray-600"
               placeholder="Re-enter your password"
               value={formData.confirmPassword}
               onChange={(e) =>
@@ -259,20 +259,14 @@ const Form = () => {
           <div className="flex justify-end gap-2">
             <button
               type="submit"
-              className="w-20 h-10 bg-black text-white rounded-sm text-sm font-medium hover:bg-gray-800"
+              className="w-20 h-10 bg-black text-white rounded-sm text-sm font-medium hover:bg-gray-800 "
             >
               SignUp
-            </button>
-            <button
-              className="w-20 h-10 bg-black text-white rounded-sm text-sm font-medium hover:bg-gray-800"
-              onClick={() => router.push("/")}
-            >
-              Back
             </button>
           </div>
         </form>
 
-        <p className="mt-2 text-xs">
+        <p className="mt-2 text-xs text-gray-600">
           Already have an account?{" "}
           <span
             className="text-blue-500 cursor-pointer"
