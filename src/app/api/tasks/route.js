@@ -1,33 +1,53 @@
 import { NextResponse } from "next/server";
 import connectionToDatabase from "../../../../lib/mongoosedb";
 import Task from "../../../../models/Task";
+import { verifyToken } from "../../../../lib/auth";
 
-export async function GET() {
+export async function GET(request)  {
   await connectionToDatabase();
-  const tasks = await Task.find();
-  return NextResponse.json(tasks);
-}
-export async function POST(req) {
-  await connectionToDatabase();
+
+  const token = request.cookies.get("authToken")?.value;
+
+  if (!token) {
+    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+  }
 
   try {
-    const { title, description } = await req.json();
+    const decoded = verifyToken(token);
+    const tasks = await Task.find({ userId: decoded.id }); 
+    return NextResponse.json(tasks, { status: 200 });
+  } catch (error) {
+    console.error("Error fetching tasks:", error);
+    return NextResponse.json({ message: "Something went wrong!" }, { status: 500 });
+  }
+}
+export async function POST(request) {
+  await connectionToDatabase();
 
-    if (!title || !description) {
-      return NextResponse.json(
-        { error: "Title and description are required" },
-        { status: 400 }
-      );
+  const token = request.cookies.get("authToken")?.value;
+
+  if (!token) {
+    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+  }
+
+  try {
+    const decoded = verifyToken(token);
+    const body = await request.json();
+    const { title, description } = body;
+
+    if (!title) {
+      return NextResponse.json({ message: "Title is required!" }, { status: 400 });
     }
 
-    const freshTask = new Task({ title, description });
-    await freshTask.save();
+    const newTask = await Task.create({
+      title,
+      description,
+      userId: decoded.id, 
+    });
 
-    return NextResponse.json(freshTask, { status: 201 });
+    return NextResponse.json(newTask, { status: 201 });
   } catch (error) {
-    return NextResponse.json(
-      { error: "Failed to create task", details: error.message },
-      { status: 500 }
-    );
+    console.error("Error creating task:", error);
+    return NextResponse.json({ message: "Something went wrong!" }, { status: 500 });
   }
 }

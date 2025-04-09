@@ -2,11 +2,11 @@ import { NextResponse } from "next/server";
 import connectionToDatabase from "../../../../../lib/mongoosedb";
 import Task from "../../../../../models/Task";
 
-export async function PUT(req) {
+export async function PUT(request) {
   await connectionToDatabase();
 
   try {
-    const datatask = await req.json();
+    const datatask = await request.json();
     // console.log("hello world", datatask);
     const renewtask = datatask;
     const updatedTask = await Task.findByIdAndUpdate(datatask._id, renewtask);
@@ -22,11 +22,11 @@ export async function PUT(req) {
   }
 }
 
-export async function DELETE(req) {
+export async function DELETE(request) {
   await connectionToDatabase();
 
   try {
-    const { id } = await req.json();
+    const { id } = await request.json();
     if (!id) {
       return NextResponse.json({ error: "ID is required" }, { status: 400 });
     }

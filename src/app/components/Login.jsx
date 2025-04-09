@@ -123,12 +123,6 @@ const Login = () => {
             >
               Login
             </button>
-            <button
-              className="w-20 h-10 bg-black text-white rounded-sm text-sm font-medium hover:bg-gray-800"
-              onClick={() => router.push("/")}
-            >
-              Back
-            </button>
           </div>
         </form>
 

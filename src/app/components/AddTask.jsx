@@ -26,6 +26,21 @@ const AddTask = () => {
     router.push("/");
   };
   useEffect(() => {
+    const fetchTasks = async () => {
+      try {
+        const response = await fetch("/api/tasks");
+        const data = await response.json();
+
+        if (Array.isArray(data)) {
+          setTasks(data);
+        } else {
+          console.error("API did not return an array:", data);
+        }
+      } catch (error) {
+        console.error("Error fetching tasks:", error);
+      }
+    };
+
     fetchTasks();
   }, []);
 
@@ -58,6 +73,13 @@ const AddTask = () => {
   const submitHandler = async (e) => {
     e.preventDefault();
     if (!validateInputs()) return;
+    if (!Array.isArray(mainTasks)) {
+      console.error("mainTasks is not an array:", mainTasks);
+      return;
+    }
+    mainTasks.forEach((task) => {
+      console.log(task);
+    });
 
     if (editTaskId !== null) {
       const Updatetask = { _id: editTaskId, title, description };
@@ -115,10 +137,26 @@ const AddTask = () => {
       : text;
   };
 
+  const handleLogout = async () => {
+    try {
+      const response = await fetch("/api/logout", {
+        method: "GET",
+      });
+
+      if (response.ok) {
+        router.push("/login");
+      } else {
+        console.error("Failed to logout");
+      }
+    } catch (error) {
+      console.error("Error during logout:", error);
+    }
+  };
+
   return (
     <div className="max-w-4xl mx-auto p-5 mt-10">
       <h1 className="text-3xl font-bold mb-4 text-center">Task Manager</h1>
-      
+
       <form onSubmit={submitHandler} className="mb-5 flex flex-wrap gap-3">
         <div className="w-full sm:w-64">
           <input
@@ -215,11 +253,10 @@ const AddTask = () => {
             No Task Available
           </h2>
         )}
-       
       </div>
-      
-      
-      <button
+
+ {/* login and signup buttons  */}
+      {/* <button
         onClick={() => router.push("/signup")}
         className="mt-4 bg-gray-700 text-white px-3 py-2 rounded cursor-pointer hover:bg-gray-950"
       >
@@ -231,6 +268,13 @@ const AddTask = () => {
         className="mt-4 bg-gray-700 text-white px-4 ml-2 py-2 rounded cursor-pointer hover:bg-gray-950"
       >
         Login
+      </button> */}
+      
+      <button 
+      onClick={handleLogout} 
+      type="submit"
+      className="mt-4 bg-gray-700 text-white px-4 ml-2 py-2 rounded cursor-pointer hover:bg-gray-950">
+        Logout
       </button>
     </div>
   );
