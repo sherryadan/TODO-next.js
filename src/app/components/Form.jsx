@@ -21,6 +21,7 @@ const Form = () => {
 
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
+  const [signupLoading, setSignupLoading] = useState(false);
 
   const validateForm = () => {
     let newErrors = {};
@@ -90,6 +91,7 @@ const Form = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setSignupLoading(true);
     if (validateForm()) {
       try {
         const res = await fetch("/api/signup", {
@@ -118,14 +120,18 @@ const Form = () => {
           setTimeout(() => {
             router.push("/login");
           } , 2000); 
-        } else {
+        }  
+        else {
           toast.error(result.message);
         }
+
       } catch (error) {
         console.error("Error:", error);
       }
+      setSignupLoading(false);
     }
   };
+
 
   return (
     <div className="flex justify-center items-center bg-gradient-to-r w-lg h-screen">

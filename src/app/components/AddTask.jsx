@@ -23,6 +23,8 @@ const AddTask = () => {
   const [loading, setLoading] = useState(true);
   const [errors, setErrors] = useState({ title: "", description: "" });
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [addloading, setAddLoading] = useState(false);
+  const [logoutLoading, setLogoutLoading] = useState(false);
 
   const fetchTasks = async () => {
     setLoading(true);
@@ -75,6 +77,8 @@ const AddTask = () => {
 
   const submitHandler = async (e) => {
   e.preventDefault();
+  setAddLoading(true);
+  setLogoutLoading(false);
 
   const isValid = isDialogOpen
     ? validateInputs(dialogTitle, dialogDescription)
@@ -95,6 +99,7 @@ const AddTask = () => {
     setEditTaskId(null);
     setIsDialogOpen(false);
     toast.success("Task updated successfully!");
+    setAddLoading(false);
   } else {
     const newTask = { title, description };
     const res = await fetch("/api/tasks", {
@@ -114,6 +119,7 @@ const AddTask = () => {
       toast.error(errorData.message || "Failed to add task");
     }
   }
+  setAddLoading(false);
 
   setTitle("");
   setDescription("");
@@ -153,6 +159,7 @@ const AddTask = () => {
       const response = await fetch("/api/logout", {
         method: "GET",
       });
+      setLogoutLoading(true);
 
       if (response.ok) {
         toast.success("Logout successful!");
@@ -206,8 +213,9 @@ const AddTask = () => {
         <Button
           type="submit"
           className="bg-black text-gray-300 px-4 rounded-md font-bold py-2 h-[42px]  hover:bg-violet-500 cursor-pointer"
+          disabled={addloading}
         >
-          Add Task
+          {addloading ? "Adding..." : "Add Task"}
         </Button>
       </form>
 
@@ -339,8 +347,9 @@ const AddTask = () => {
         onClick={handleLogout}
         type="submit"
         className="bg-black text-gray-300 px-4 rounded-md font-bold py-2 h-[42px]  hover:bg-violet-500 cursor-pointer mt-4"
+        disabled={logoutLoading}
       >
-        Logout
+        {logoutLoading ? "Logging out..." : "Logout"}
       </Button>
     </div>
   );

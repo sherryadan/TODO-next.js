@@ -14,6 +14,7 @@ const Login = () => {
 
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const validateForm = () => {
     let newErrors = {};
@@ -40,6 +41,7 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (validateForm()) {
+      setIsLoading(true);
       try {
         const res = await fetch(`/api/login`, {
           method: "POST",
@@ -58,6 +60,7 @@ const Login = () => {
         } catch (error) {
           console.error("Failed to parse JSON:", error);
           toast.error("Failed to parse server response. Please try again.");
+          setIsLoading(false);
           return;
         }
   
@@ -80,6 +83,8 @@ const Login = () => {
       } catch (error) {
         console.error("Error:", error);
         toast.error("An error occurred. Please try again.");
+      } finally {
+        setIsLoading(false);
       }
     }
   };
@@ -133,8 +138,9 @@ const Login = () => {
             <Button
               type="submit"
               className="bg-black text-white px-4 rounded-md font-bold h-9  hover:bg-violet-500 cursor-pointer"
+              disabled={isLoading}
             >
-              Login
+              {isLoading ? "Logging in" : "Login"}
             </Button>
           </div>
         </form>
