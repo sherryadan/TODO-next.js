@@ -27,7 +27,8 @@ const TaskDetails = () => {
     return (
       <div className="flex justify-center items-center min-h-screen min-w-screen bg-#dae1ea">
         <div className="bg-gray-300 shadow-xl rounded-xl p-6 w-full max-w-lg text-center">
-        <h2 className="text-xl font-semibold animate-pulse">Loading...</h2></div>
+          <h2 className="text-xl font-semibold animate-pulse">Loading...</h2>
+        </div>
       </div>
     );
   }

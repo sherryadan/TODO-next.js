@@ -34,10 +34,7 @@ export async function POST(request) {
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
-      return NextResponse.json(
-        { message: "Wrong password!" },
-        { status: 401 }
-      );
+      return NextResponse.json({ message: "Wrong password!" }, { status: 401 });
     }
 
     const token = generateToken({ id: user._id, email: user.email });

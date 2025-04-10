@@ -10,7 +10,7 @@ import {
   DialogTitle,
   DialogClose,
 } from "@radix-ui/react-dialog";
-import toast , { Toaster } from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 
 const AddTask = () => {
   const router = useRouter();
@@ -52,7 +52,7 @@ const AddTask = () => {
   const validateInputs = (titleToValidate, descriptionToValidate) => {
     let isValid = true;
     let newErrors = { title: "", description: "" };
-  
+
     if (/^\d+$/.test(titleToValidate)) {
       newErrors.title = "Invalid Title";
       isValid = false;
@@ -61,7 +61,7 @@ const AddTask = () => {
       newErrors.title = "Title Required";
       isValid = false;
     }
-  
+
     if (/^\d+$/.test(descriptionToValidate)) {
       newErrors.description = "Invalid Description";
       isValid = false;
@@ -70,63 +70,66 @@ const AddTask = () => {
       newErrors.description = "Description Required";
       isValid = false;
     }
-  
+
     setErrors(newErrors);
     return isValid;
   };
 
   const submitHandler = async (e) => {
-  e.preventDefault();
-  setAddLoading(true);
-  setLogoutLoading(false);
+    e.preventDefault();
+    setAddLoading(true);
+    setLogoutLoading(false);
 
-  const isValid = isDialogOpen
-    ? validateInputs(dialogTitle, dialogDescription)
-    : validateInputs(title, description);
+    const isValid = isDialogOpen
+      ? validateInputs(dialogTitle, dialogDescription)
+      : validateInputs(title, description);
 
-  if (!isValid) return;
+    if (!isValid) return;
 
-  if (isDialogOpen && editTaskId !== null) {
-    const updatedTask = { _id: editTaskId, title: dialogTitle, description: dialogDescription };
-    await fetch(`/api/tasks/${editTaskId}`, {
-      method: "PUT",
-      body: JSON.stringify(updatedTask),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    fetchTasks();
-    setEditTaskId(null);
-    setIsDialogOpen(false);
-    toast.success("Task updated successfully!");
+    if (isDialogOpen && editTaskId !== null) {
+      const updatedTask = {
+        _id: editTaskId,
+        title: dialogTitle,
+        description: dialogDescription,
+      };
+      await fetch(`/api/tasks/${editTaskId}`, {
+        method: "PUT",
+        body: JSON.stringify(updatedTask),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      fetchTasks();
+      setEditTaskId(null);
+      setIsDialogOpen(false);
+      toast.success("Task updated successfully!");
+      setAddLoading(false);
+    } else {
+      const newTask = { title, description };
+      const res = await fetch("/api/tasks", {
+        method: "POST",
+        body: JSON.stringify(newTask),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (res.ok) {
+        const createdTask = await res.json();
+        setTasks([...mainTasks, createdTask]);
+        toast.success("Task added successfully!");
+      } else {
+        toast.error(errorData.message || "Failed to add task");
+      }
+    }
     setAddLoading(false);
-  } else {
-    const newTask = { title, description };
-    const res = await fetch("/api/tasks", {
-      method: "POST",
-      body: JSON.stringify(newTask),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
 
-    if (res.ok) {
-      const createdTask = await res.json();
-      setTasks([...mainTasks, createdTask]);
-      toast.success("Task added successfully!");
-    }
-    else {
-      toast.error(errorData.message || "Failed to add task");
-    }
-  }
-  setAddLoading(false);
-
-  setTitle("");
-  setDescription("");
-  setDialogTitle("");
-  setDialogDescription("");
-  setErrors({ title: "", description: "" });
-};
+    setTitle("");
+    setDescription("");
+    setDialogTitle("");
+    setDialogDescription("");
+    setErrors({ title: "", description: "" });
+  };
 
   const deleteTask = async (id) => {
     await fetch(`/api/tasks/${id}`, {
@@ -165,7 +168,7 @@ const AddTask = () => {
         toast.success("Logout successful!");
         setTimeout(() => {
           router.push("/login");
-        } , 2000); 
+        }, 2000);
       } else {
         console.error("Failed to logout");
         toast.error("Logout failed!");

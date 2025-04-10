@@ -7,7 +7,6 @@ export async function PUT(request) {
 
   try {
     const datatask = await request.json();
-    // console.log("hello world", datatask);
     const renewtask = datatask;
     const updatedTask = await Task.findByIdAndUpdate(datatask._id, renewtask);
 
@@ -46,5 +45,3 @@ export async function DELETE(request) {
     );
   }
 }
-
-

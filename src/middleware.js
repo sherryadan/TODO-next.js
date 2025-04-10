@@ -9,23 +9,21 @@ export function middleware(req) {
   const tokenCookie = req.cookies.get("authToken");
   const token = tokenCookie?.value;
 
-  if (token){
+  if (token) {
+    try {
+      verifyToken(token);
+      return NextResponse.next();
+    } catch (error) {
+      return NextResponse.redirect(new URL("/login", req.url));
+    }
+  }
   try {
-    verifyToken(token);
+    const decoded = verifyToken(token);
+    req.userId = decoded.id;
     return NextResponse.next();
-   
   } catch (error) {
     return NextResponse.redirect(new URL("/login", req.url));
   }
-}
-try{
-  const decoded = verifyToken(token);
-  req.userId = decoded.id; 
-return NextResponse.next();
-}
-catch (error) {
-  return NextResponse.redirect(new URL("/login", req.url));
-}
 }
 
 export const config = {

@@ -9,7 +9,7 @@ export async function GET() {
   response.cookies.set("authToken", "", {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
-    maxAge: 0, 
+    maxAge: 0,
   });
 
   return response;

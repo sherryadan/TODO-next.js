@@ -2,8 +2,8 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import {Button} from "@/components/ui/button";
-import toast , {Toaster} from "react-hot-toast";
+import { Button } from "@/components/ui/button";
+import toast, { Toaster } from "react-hot-toast";
 
 const Form = () => {
   const router = useRouter();
@@ -119,19 +119,16 @@ const Form = () => {
           toast.success("Account created successfully!");
           setTimeout(() => {
             router.push("/login");
-          } , 2000); 
-        }  
-        else {
+          }, 2000);
+        } else {
           toast.error(result.message);
         }
-
       } catch (error) {
         console.error("Error:", error);
       }
       setSignupLoading(false);
     }
   };
-
 
   return (
     <div className="flex justify-center items-center bg-gradient-to-r w-lg h-screen">
@@ -155,7 +152,9 @@ const Form = () => {
                   setFormData({ ...formData, firstName: e.target.value })
                 }
               />
-              <p className="text-red-500 text-xs mt-1 min-h-[17px]">{errors.firstName}</p>
+              <p className="text-red-500 text-xs mt-1 min-h-[17px]">
+                {errors.firstName}
+              </p>
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-300">
@@ -170,7 +169,9 @@ const Form = () => {
                   setFormData({ ...formData, lastName: e.target.value })
                 }
               />
-              <p className="text-red-500 text-xs mt-1 min-h-[17px]">{errors.lastName}</p>
+              <p className="text-red-500 text-xs mt-1 min-h-[17px]">
+                {errors.lastName}
+              </p>
             </div>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 ">
@@ -187,7 +188,9 @@ const Form = () => {
                   setFormData({ ...formData, company: e.target.value })
                 }
               />
-              <p className="text-red-500 text-xs mt-1 min-h-[17px]">{errors.company}</p>
+              <p className="text-red-500 text-xs mt-1 min-h-[17px]">
+                {errors.company}
+              </p>
             </div>
 
             <div>
@@ -203,7 +206,9 @@ const Form = () => {
                   setFormData({ ...formData, phone: e.target.value })
                 }
               />
-              <p className="text-red-500 text-xs mt-1 min-h-[17px]">{errors.phone}</p>
+              <p className="text-red-500 text-xs mt-1 min-h-[17px]">
+                {errors.phone}
+              </p>
             </div>
           </div>
           <div>
@@ -219,7 +224,9 @@ const Form = () => {
                 setFormData({ ...formData, website: e.target.value })
               }
             />
-            <p className="text-red-500 text-xs mt-1 min-h-[17px]">{errors.website}</p>
+            <p className="text-red-500 text-xs mt-1 min-h-[17px]">
+              {errors.website}
+            </p>
           </div>
 
           <div>
@@ -235,7 +242,9 @@ const Form = () => {
                 setFormData({ ...formData, email: e.target.value })
               }
             />
-            <p className="text-red-500 text-xs mt-1 min-h-[17px]">{errors.email}</p>
+            <p className="text-red-500 text-xs mt-1 min-h-[17px]">
+              {errors.email}
+            </p>
           </div>
 
           <div>
@@ -243,21 +252,25 @@ const Form = () => {
               Password
             </label>
             <div className="relative">
-            <input
-              type={showPassword ? "text" : "password"}
-              className="mt-1 h-9 block w-full p-3 border text-amber-50 border-gray-300 rounded-sm shadow-sm focus:outline-0 placeholder-gray-600"
-              placeholder="Enter your password"
-              value={formData.password}
-              onChange={(e) =>
-                setFormData({ ...formData, password: e.target.value })
-              }
-            />
-            <span className="absolute right-2 top-2.5 cursor-pointer text-gray-500"
-              onClick={() => setShowPassword(!showPassword)}>
-              {showPassword ? <FaEyeSlash/> : <FaEye/>}
-            </span>
+              <input
+                type={showPassword ? "text" : "password"}
+                className="mt-1 h-9 block w-full p-3 border text-amber-50 border-gray-300 rounded-sm shadow-sm focus:outline-0 placeholder-gray-600"
+                placeholder="Enter your password"
+                value={formData.password}
+                onChange={(e) =>
+                  setFormData({ ...formData, password: e.target.value })
+                }
+              />
+              <span
+                className="absolute right-2 top-2.5 cursor-pointer text-gray-500"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? <FaEyeSlash /> : <FaEye />}
+              </span>
             </div>
-            <p className="text-red-500 text-xs mt-1 min-h-[17px]">{errors.password}</p>
+            <p className="text-red-500 text-xs mt-1 min-h-[17px]">
+              {errors.password}
+            </p>
           </div>
 
           <div>
