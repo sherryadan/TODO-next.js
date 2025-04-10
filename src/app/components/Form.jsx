@@ -1,6 +1,10 @@
 "use client";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+import {Button} from "@/components/ui/button";
+import toast , {Toaster} from "react-hot-toast";
+
 const Form = () => {
   const router = useRouter();
   const [formData, setFormData] = useState({
@@ -16,6 +20,7 @@ const Form = () => {
   });
 
   const [errors, setErrors] = useState({});
+  const [showPassword, setShowPassword] = useState(false);
 
   const validateForm = () => {
     let newErrors = {};
@@ -96,7 +101,7 @@ const Form = () => {
         const result = await res.json();
 
         if (res.ok) {
-          alert(result.message);
+          toast.success(result.message);
           setFormData({
             firstName: "",
             lastName: "",
@@ -109,8 +114,12 @@ const Form = () => {
             termsAccepted: false,
           });
           setErrors({});
+          toast.success("Account created successfully!");
+          setTimeout(() => {
+            router.push("/login");
+          } , 2000); 
         } else {
-          alert(result.message);
+          toast.error(result.message);
         }
       } catch (error) {
         console.error("Error:", error);
@@ -119,7 +128,8 @@ const Form = () => {
   };
 
   return (
-    <div>
+    <div className="flex justify-center items-center bg-gradient-to-r w-lg h-screen">
+      <Toaster position="top-center" reverseOrder={false} />
       <div className="bg-[#100224] p-8 rounded-lg shadow-lg w-full max-w-lg mb-5">
         <h1 className="text-2xl font-bold text-center mb-4 text-gray-300">
           Create an account
@@ -132,14 +142,14 @@ const Form = () => {
               </label>
               <input
                 type="text"
-                className="mt-1 h-9 block w-full p-3 border border-gray-300 rounded-sm shadow-sm focus:outline-0 placeholder-gray-600"
+                className="mt-1 h-9 block w-full p-3 border text-amber-50 border-gray-300 rounded-sm shadow-sm focus:outline-0 placeholder-gray-600"
                 placeholder="Enter your first name"
                 value={formData.firstName}
                 onChange={(e) =>
                   setFormData({ ...formData, firstName: e.target.value })
                 }
               />
-              <p className="text-red-500 text-xs mt-1">{errors.firstName}</p>
+              <p className="text-red-500 text-xs mt-1 min-h-[17px]">{errors.firstName}</p>
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-300">
@@ -147,14 +157,14 @@ const Form = () => {
               </label>
               <input
                 type="text"
-                className="mt-1 h-9 block w-full p-3 border border-gray-300 rounded-sm shadow-sm focus:outline-0 placeholder-gray-600"
+                className="mt-1 h-9 block w-full p-3 border text-amber-50 border-gray-300 rounded-sm shadow-sm focus:outline-0 placeholder-gray-600"
                 placeholder="Enter your last name"
                 value={formData.lastName}
                 onChange={(e) =>
                   setFormData({ ...formData, lastName: e.target.value })
                 }
               />
-              <p className="text-red-500 text-xs mt-1">{errors.lastName}</p>
+              <p className="text-red-500 text-xs mt-1 min-h-[17px]">{errors.lastName}</p>
             </div>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 ">
@@ -164,14 +174,14 @@ const Form = () => {
               </label>
               <input
                 type="text"
-                className="mt-1 h-9 block w-full p-3 border border-gray-300 rounded-sm shadow-sm focus:outline-0 placeholder-gray-600"
+                className="mt-1 h-9 block w-full p-3 border text-amber-50 border-gray-300 rounded-sm shadow-sm focus:outline-0 placeholder-gray-600"
                 placeholder="Enter your company name"
                 value={formData.company}
                 onChange={(e) =>
                   setFormData({ ...formData, company: e.target.value })
                 }
               />
-              <p className="text-red-500 text-xs mt-1">{errors.company}</p>
+              <p className="text-red-500 text-xs mt-1 min-h-[17px]">{errors.company}</p>
             </div>
 
             <div>
@@ -180,14 +190,14 @@ const Form = () => {
               </label>
               <input
                 type="text"
-                className="mt-1 h-9 block w-full p-3 border border-gray-300 rounded-sm shadow-sm focus:outline-0 placeholder-gray-600"
+                className="mt-1 h-9 block w-full p-3 border text-amber-50 border-gray-300 rounded-sm shadow-sm focus:outline-0 placeholder-gray-600"
                 placeholder="Enter your phone number"
                 value={formData.phone}
                 onChange={(e) =>
                   setFormData({ ...formData, phone: e.target.value })
                 }
               />
-              <p className="text-red-500 text-xs mt-1">{errors.phone}</p>
+              <p className="text-red-500 text-xs mt-1 min-h-[17px]">{errors.phone}</p>
             </div>
           </div>
           <div>
@@ -196,14 +206,14 @@ const Form = () => {
             </label>
             <input
               type="text"
-              className="mt-1 h-9 block w-full p-3 border border-gray-300 rounded-sm shadow-sm focus:outline-0 placeholder-gray-600"
+              className="mt-1 h-9 block w-full p-3 border text-amber-50 border-gray-300 rounded-sm shadow-sm focus:outline-0 placeholder-gray-600"
               placeholder="Enter your website URL"
               value={formData.website}
               onChange={(e) =>
                 setFormData({ ...formData, website: e.target.value })
               }
             />
-            <p className="text-red-500 text-xs mt-1">{errors.website}</p>
+            <p className="text-red-500 text-xs mt-1 min-h-[17px]">{errors.website}</p>
           </div>
 
           <div>
@@ -212,30 +222,36 @@ const Form = () => {
             </label>
             <input
               type="email"
-              className="mt-1 h-9 block w-full p-3 border border-gray-300 rounded-sm shadow-sm focus:outline-0 placeholder-gray-600"
+              className="mt-1 h-9 block w-full p-3 border text-amber-50 border-gray-300 rounded-sm shadow-sm focus:outline-0 placeholder-gray-600"
               placeholder="Enter your email"
               value={formData.email}
               onChange={(e) =>
                 setFormData({ ...formData, email: e.target.value })
               }
             />
-            <p className="text-red-500 text-xs mt-1">{errors.email}</p>
+            <p className="text-red-500 text-xs mt-1 min-h-[17px]">{errors.email}</p>
           </div>
 
           <div>
             <label className="block text-sm font-medium text-gray-300">
               Password
             </label>
+            <div className="relative">
             <input
-              type="password"
-              className="mt-1 h-9 block w-full p-3 border border-gray-300 rounded-sm shadow-sm focus:outline-0 placeholder-gray-600"
+              type={showPassword ? "text" : "password"}
+              className="mt-1 h-9 block w-full p-3 border text-amber-50 border-gray-300 rounded-sm shadow-sm focus:outline-0 placeholder-gray-600"
               placeholder="Enter your password"
               value={formData.password}
               onChange={(e) =>
                 setFormData({ ...formData, password: e.target.value })
               }
             />
-            <p className="text-red-500 text-xs mt-1">{errors.password}</p>
+            <span className="absolute right-2 top-2.5 cursor-pointer text-gray-500"
+              onClick={() => setShowPassword(!showPassword)}>
+              {showPassword ? <FaEyeSlash/> : <FaEye/>}
+            </span>
+            </div>
+            <p className="text-red-500 text-xs mt-1 min-h-[17px]">{errors.password}</p>
           </div>
 
           <div>
@@ -244,25 +260,25 @@ const Form = () => {
             </label>
             <input
               type="password"
-              className="mt-1 h-9 block w-full p-3 border border-gray-300 rounded-sm shadow-sm focus:outline-0 placeholder-gray-600"
+              className="mt-1 h-9 block w-full p-3 border text-amber-50 border-gray-300 rounded-sm shadow-sm focus:outline-0 placeholder-gray-600"
               placeholder="Re-enter your password"
               value={formData.confirmPassword}
               onChange={(e) =>
                 setFormData({ ...formData, confirmPassword: e.target.value })
               }
             />
-            <p className="text-red-500 text-xs mt-1">
+            <p className="text-red-500 text-xs mt-1 min-h-[17px]">
               {errors.confirmPassword}
             </p>
           </div>
 
           <div className="flex justify-end gap-2">
-            <button
+            <Button
               type="submit"
-              className="w-20 h-10 bg-black text-white rounded-sm text-sm font-medium hover:bg-gray-800 "
+              className="w-20 h-10 bg-black text-white rounded-sm text-sm font-medium hover:bg-violet-500 "
             >
               SignUp
-            </button>
+            </Button>
           </div>
         </form>
 

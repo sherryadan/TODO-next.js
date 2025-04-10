@@ -1,6 +1,9 @@
 "use client";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+import {Button} from "@/components/ui/button";
+import toast , { Toaster } from "react-hot-toast";
 
 const Login = () => {
   const router = useRouter();
@@ -10,6 +13,7 @@ const Login = () => {
   });
 
   const [errors, setErrors] = useState({});
+  const [showPassword, setShowPassword] = useState(false);
 
   const validateForm = () => {
     let newErrors = {};
@@ -53,18 +57,20 @@ const Login = () => {
           result = await res.json();
         } catch (error) {
           console.error("Failed to parse JSON:", error);
-          alert("Unexpected server response. Please try again.");
+          toast.error("Failed to parse server response. Please try again.");
           return;
         }
   
         if (res.ok) {
-          alert(result.message);
           setFormData({
             email: "",
             password: "",
           });
           setErrors({});
-          router.push("/");
+          toast.success("Login successful!");
+          setTimeout(() => {
+            router.push("/");
+          } , 2000); 
         } else {
           setErrors((prevErrors) => ({
             ...prevErrors,
@@ -73,14 +79,15 @@ const Login = () => {
         }
       } catch (error) {
         console.error("Error:", error);
-        alert("An error occurred. Please try again.");
+        toast.error("An error occurred. Please try again.");
       }
     }
   };
 
 
   return (
-    <div>
+    <div className="flex justify-center items-center bg-gradient-to-r w-sm h-screen">
+      <Toaster position="top-center" reverseOrder={false} />
       <div className="bg-[#100224] p-8 rounded-lg shadow-lg w-full max-w-lg mb-5">
         <h1 className="text-2xl font-bold text-center text-gray-300 mb-4">Login</h1>
         <form className="space-y-4" onSubmit={handleSubmit}>
@@ -97,15 +104,16 @@ const Login = () => {
                 setFormData({ ...formData, email: e.target.value })
               }
             />
-            <p className="text-red-500 text-xs mt-1">{errors.email}</p>
+            <p className="text-red-500 text-xs mt-1 min-h-[20px]">{errors.email}</p>
           </div>
 
           <div>
             <label className="block text-sm font-medium text-gray-300">
               Password
             </label>
+            <div className="relative">
             <input
-              type="password"
+              type={showPassword ? "text" : "password"}
               className="mt-1 h-9 block w-full p-3 border text-gray-300 border-gray-300 rounded-sm shadow-sm focus:outline-0 placeholder-gray-600"
               placeholder="Enter your password"
               value={formData.password}
@@ -113,16 +121,21 @@ const Login = () => {
                 setFormData({ ...formData, password: e.target.value })
               }
             />
-            <p className="text-red-500 text-xs mt-1">{errors.password}</p>
+            <span className="absolute right-2 top-2.5 cursor-pointer text-gray-500"
+              onClick={() => setShowPassword(!showPassword)}>
+                {showPassword ? <FaEyeSlash/> : <FaEye/>}
+            </span>
+            </div>
+            <p className="text-red-500 text-xs mt-1 min-h-[20px]">{errors.password}</p>
           </div>
 
           <div className="flex justify-end gap-2">
-            <button
+            <Button
               type="submit"
               className="bg-black text-white px-4 rounded-md font-bold h-9  hover:bg-violet-500 cursor-pointer"
             >
               Login
-            </button>
+            </Button>
           </div>
         </form>
 
