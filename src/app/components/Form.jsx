@@ -103,7 +103,6 @@ const Form = () => {
         const result = await res.json();
 
         if (res.ok) {
-          toast.success(result.message);
           setFormData({
             firstName: "",
             lastName: "",
@@ -131,7 +130,7 @@ const Form = () => {
   };
 
   return (
-    <div className="flex justify-center items-center bg-gradient-to-r w-lg h-screen">
+    <div className="flex justify-center items-center bg-gradient-to-r w-lg min-h-screen">
       <Toaster position="top-center" reverseOrder={false} />
       <div className="bg-[#100224] p-8 rounded-lg shadow-lg w-full max-w-lg mb-5">
         <h1 className="text-2xl font-bold text-center mb-4 text-gray-300">
