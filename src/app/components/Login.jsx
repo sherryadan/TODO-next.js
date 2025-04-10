@@ -132,7 +132,7 @@ const Login = () => {
             className="text-blue-500 cursor-pointer"
             onClick={() => router.push("/signup")}
           >
-            Sign Up
+          Sign Up
           </span>
         </p>
       </div>
