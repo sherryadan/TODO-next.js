@@ -84,7 +84,9 @@ const AddTask = () => {
       ? validateInputs(dialogTitle, dialogDescription)
       : validateInputs(title, description);
 
-    if (!isValid) return;
+    if (!isValid){
+      setAddLoading(false);
+     return;}
 
     if (isDialogOpen && editTaskId !== null) {
       const updatedTask = {
@@ -193,7 +195,10 @@ const AddTask = () => {
             className="border-1 px-3 py-2 w-full border-violet-800 placeholder-gray-500 text-gray-400 rounded-md"
             placeholder="Enter Task Title"
             value={title}
-            onChange={(e) => setTitle(e.target.value)}
+            onChange={(e) => {
+              setTitle(e.target.value);
+              setErrors((prevErrors) => ({ ...prevErrors, title: "" })); 
+            }}
           />
           <p className="text-red-500 text-xs min-h-[20px]">
             {errors.title || " "}
@@ -206,7 +211,10 @@ const AddTask = () => {
             className="border-1 px-3 py-2 w-full border-violet-800 placeholder-gray-500 text-gray-400 rounded-md"
             placeholder="Enter Description"
             value={description}
-            onChange={(e) => setDescription(e.target.value)}
+            onChange={(e) => {
+              setDescription(e.target.value);
+              setErrors((prevErrors) => ({ ...prevErrors, description: "" }));
+            }}
           />
           <p className="text-red-500 text-xs min-h-[20px]">
             {errors.description || " "}
