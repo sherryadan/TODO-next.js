@@ -25,6 +25,8 @@ const AddTask = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [addloading, setAddLoading] = useState(false);
   const [logoutLoading, setLogoutLoading] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [taskToDelete, setTaskToDelete] = useState(null);
 
   const fetchTasks = async () => {
     setLoading(true);
@@ -134,17 +136,29 @@ const AddTask = () => {
     setErrors({ title: "", description: "" });
   };
 
-  const deleteTask = async (id) => {
-    await fetch(`/api/tasks/${id}`, {
-      method: "DELETE",
-      body: JSON.stringify({ id }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+  const openDeleteDialog = (task) => {
+    setTaskToDelete(task);
+    setIsDeleteDialogOpen(true);
+  };
 
-    fetchTasks();
-    toast.success("Task deleted successfully!");
+  const confirmDelete = async () => {
+    if (taskToDelete) {
+      try {
+        await fetch(`/api/tasks/${taskToDelete._id}`, {
+          method: "DELETE",
+        });
+        setTasks((prevTasks) =>
+          prevTasks.filter((task) => task._id !== taskToDelete._id)
+        );
+        toast.success("Task deleted successfully!");
+      } catch (error) {
+        console.error("Error deleting task:", error);
+        toast.error("Failed to delete task.");
+      } finally {
+        setIsDeleteDialogOpen(false);
+        setTaskToDelete(null);
+      }
+    }
   };
 
   const editTask = (task) => {
@@ -276,7 +290,7 @@ const AddTask = () => {
                     </Button>
                     <Button
                       className="bg-violet-400 hover:bg-violet-600 text-white text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2 rounded-md cursor-pointer"
-                      onClick={() => deleteTask(task._id)}
+                      onClick={() => openDeleteDialog(task)}
                     >
                       <MdDelete />
                     </Button>
@@ -353,6 +367,31 @@ const AddTask = () => {
             </DialogContent>
           </>
         )}
+      </Dialog>
+      <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <DialogContent className="fixed inset-0 flex items-center justify-center z-50">
+          <div className="bg-[#1e1728] p-6 rounded-md shadow-lg w-full max-w-md">
+            <DialogTitle className="text-lg font-bold text-gray-300">
+              Confirm Delete
+            </DialogTitle>
+            <p className="text-gray-400 mt-4">
+              Are you sure you want to delete this task?
+            </p>
+            <div className="flex justify-end gap-2 mt-6">
+              <DialogClose asChild>
+                <Button className="bg-gray-600 text-gray-300 px-4 py-2 rounded-md cursor-pointer hover:bg-gray-700">
+                  Cancel
+                </Button>
+              </DialogClose>
+              <Button
+                onClick={confirmDelete}
+                className="bg-red-500 text-white px-4 py-2 rounded-md cursor-pointer hover:bg-red-600"
+              >
+                Delete
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
       </Dialog>
 
       <Button
