@@ -84,9 +84,10 @@ const AddTask = () => {
       ? validateInputs(dialogTitle, dialogDescription)
       : validateInputs(title, description);
 
-    if (!isValid){
+    if (!isValid) {
       setAddLoading(false);
-     return;}
+      return;
+    }
 
     if (isDialogOpen && editTaskId !== null) {
       const updatedTask = {
@@ -197,7 +198,7 @@ const AddTask = () => {
             value={title}
             onChange={(e) => {
               setTitle(e.target.value);
-              setErrors((prevErrors) => ({ ...prevErrors, title: "" })); 
+              setErrors((prevErrors) => ({ ...prevErrors, title: "" }));
             }}
           />
           <p className="text-red-500 text-xs min-h-[20px]">
