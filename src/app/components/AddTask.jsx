@@ -277,7 +277,7 @@ const AddTask = () => {
                   </td>
                   <td className="px-4 py-2 flex justify-center gap-2 flex-wrap">
                     <Button
-                      className="bg-violet-400 hover:bg-violet-600 text-white text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2 rounded-md cursor-pointer"
+                      className="bg-violet-400 hover:bg-violet-500 text-white text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2 rounded-md cursor-pointer"
                       onClick={() => router.push(`/tasks/${task._id}`)}
                     >
                       <MdRemoveRedEye />
@@ -289,7 +289,7 @@ const AddTask = () => {
                       <MdEdit />
                     </Button>
                     <Button
-                      className="bg-violet-400 hover:bg-violet-600 text-white text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2 rounded-md cursor-pointer"
+                      className="bg-violet-400 hover:bg-red-600 text-white text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2 rounded-md cursor-pointer"
                       onClick={() => openDeleteDialog(task)}
                     >
                       <MdDelete />
@@ -397,7 +397,7 @@ const AddTask = () => {
       <Button
         onClick={handleLogout}
         type="submit"
-        className="bg-black text-gray-300 px-4 rounded-md font-bold py-2 h-[42px]  hover:bg-violet-500 cursor-pointer mt-4"
+        className="bg-black text-gray-300 px-4 rounded-md font-bold py-2 h-[42px]  hover:bg-red-500 cursor-pointer mt-4"
         disabled={logoutLoading}
       >
         {logoutLoading ? "Logging out..." : "Logout"}
