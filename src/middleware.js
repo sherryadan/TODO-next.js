@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { verifyToken } from "../lib/auth";
 export function middleware(req) {
   const { pathname } = req.nextUrl;
-  if (pathname.startsWith("/login") || pathname.startsWith("/signup")) {
+  if (pathname.startsWith("/login") || pathname.startsWith("/signup") ) {
     return NextResponse.next();
   }
 

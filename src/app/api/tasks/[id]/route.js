@@ -21,20 +21,21 @@ export async function PUT(request) {
   }
 }
 
-export async function DELETE(request) {
+export async function DELETE(request, { params }) {
   await connectionToDatabase();
 
+  const { id } = await params;
+
+  if (!id) {
+    return NextResponse.json({ error: "ID is required" }, { status: 400 });
+  }
+  
   try {
-    const { id } = await request.json();
-    if (!id) {
-      return NextResponse.json({ error: "ID is required" }, { status: 400 });
-    }
-
-    const deletedTask = await Task.findByIdAndDelete(id);
-
-    if (!deletedTask) {
+    const task = await Task.findById(id);
+    if (!task) {
       return NextResponse.json({ error: "Task not found" }, { status: 404 });
     }
+    await Task.findByIdAndDelete(id);
 
     return NextResponse.json({ message: "Task deleted successfully" });
   } catch (error) {
