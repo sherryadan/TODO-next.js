@@ -402,14 +402,6 @@ const AddTask = () => {
       >
         {logoutLoading ? "Logging out..." : "Logout"}
       </Button>
-      <Button
-        onClick={() => router.push("/profiledata")}
-        type="submit"
-        className="bg-black text-gray-300 px-4 rounded-md font-bold py-2 h-[42px]  hover:bg-red-500 cursor-pointer mt-4"
-      
-      >
-        UserProfile
-      </Button>
     </div>
   );
 };
