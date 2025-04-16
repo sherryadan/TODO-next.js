@@ -41,54 +41,64 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (validateForm()) {
-      setIsLoading(true);
-      try {
-        const res = await fetch(`/api/login`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email: formData.email,
-            password: formData.password,
-          }),
-        });
-
-        let result;
+        setIsLoading(true);
         try {
-          result = await res.json();
+            const res = await fetch(`/api/login`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    email: formData.email,
+                    password: formData.password,
+                }),
+            });
+
+            let result;
+            try {
+                result = await res.json();
+            } catch (error) {
+                console.error("Failed to parse JSON:", error);
+                toast.error("Failed to parse server response. Please try again.");
+                setIsLoading(false);
+                return;
+            }
+
+            if (res.ok) {
+                const token = result.token; // Assuming the token is returned in the response
+                if (token) {
+                    localStorage.setItem("authToken", token); // Store the token in local storage
+                } else {
+                    console.error("Token not found in response");
+                    toast.error("Login failed. Please try again.");
+                    setIsLoading(false);
+                    return;
+                }
+
+                setFormData({
+                    email: "",
+                    password: "",
+                });
+                setErrors({});
+                toast.success("Login successful!");
+
+                setTimeout(() => {
+                    router.push("/");
+                }, 2000);
+            } else {
+                setErrors((prevErrors) => ({
+                    ...prevErrors,
+                    password: result.message,
+                }));
+            }
         } catch (error) {
-          console.error("Failed to parse JSON:", error);
-          toast.error("Failed to parse server response. Please try again.");
-          setIsLoading(false);
-          return;
+            console.error("Error:", error);
+            toast.error("An error occurred. Please try again.");
+        } finally {
+            setIsLoading(false);
         }
-
-        if (res.ok) {
-          setFormData({
-            email: "",
-            password: "",
-          });
-          setErrors({});
-          toast.success("Login successful!");
-          setTimeout(() => {
-            router.push("/");
-          }, 2000);
-        } else {
-          setErrors((prevErrors) => ({
-            ...prevErrors,
-            password: result.message,
-          }));
-        }
-      } catch (error) {
-        console.error("Error:", error);
-        toast.error("An error occurred. Please try again.");
-      } finally {
-        setIsLoading(false);
-      }
     }
-  };
-
+};
   return (
     <div className="flex justify-center items-center bg-gradient-to-r w-sm h-screen">
       <Toaster position="top-center" reverseOrder={false} />
