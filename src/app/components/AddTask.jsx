@@ -79,7 +79,6 @@ const AddTask = () => {
   const submitHandler = async (e) => {
     e.preventDefault();
     setAddLoading(true);
-    setLogoutLoading(false);
 
     const isValid = isDialogOpen
       ? validateInputs(dialogTitle, dialogDescription)
