@@ -24,7 +24,6 @@ const AddTask = () => {
   const [errors, setErrors] = useState({ title: "", description: "" });
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [addloading, setAddLoading] = useState(false);
-  const [logoutLoading, setLogoutLoading] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [taskToDelete, setTaskToDelete] = useState(null);
 
@@ -174,30 +173,8 @@ const AddTask = () => {
       : text;
   };
 
-  const handleLogout = async () => {
-    try {
-      const response = await fetch("/api/logout", {
-        method: "GET",
-      });
-      setLogoutLoading(true);
-
-      if (response.ok) {
-        toast.success("Logout successful!");
-        setTimeout(() => {
-          router.push("/login");
-        }, 2000);
-      } else {
-        console.error("Failed to logout");
-        toast.error("Logout failed!");
-      }
-    } catch (error) {
-      console.error("Error during logout:", error);
-      toast.error("Error during logout!");
-    }
-  };
-
   return (
-    <div className={`max-w-4xl mx-auto p-5 mt-10`}>
+    <div className={`max-w-4xl mx-auto p-5 mt-15`}>
       <Toaster position="top-right" reverseOrder={false} />
       <h1 className="text-3xl font-bold mb-4 text-center text-gray-400">
         Task Manager
@@ -393,15 +370,6 @@ const AddTask = () => {
           </div>
         </DialogContent>
       </Dialog>
-
-      <Button
-        onClick={handleLogout}
-        type="submit"
-        className="bg-black text-gray-300 px-4 rounded-md font-bold py-2 h-[42px]  hover:bg-red-500 cursor-pointer mt-4"
-        disabled={logoutLoading}
-      >
-        {logoutLoading ? "Logging out..." : "Logout"}
-      </Button>
     </div>
   );
 };
