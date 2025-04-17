@@ -9,6 +9,7 @@ const userSchema = new mongoose.Schema(
     website: { type: String },
     email: { type: String },
     password: { type: String },
+    avatarUrl: { type: String, default: '' },
   },
   { collection: "users" }
 );

@@ -173,7 +173,7 @@ const AddTask = () => {
   };
 
   return (
-    <div className={`max-w-4xl mx-auto p-5 mt-15`}>
+    <div className="max-w-4xl mx-auto p-5 mt-15">
       <Toaster position="top-right" reverseOrder={false} />
       <h1 className="text-3xl font-bold mb-4 text-center text-gray-400">
         Task Manager

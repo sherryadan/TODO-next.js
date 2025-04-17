@@ -1,7 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
 import toast, { Toaster } from "react-hot-toast";
-import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import {
@@ -31,7 +30,7 @@ function MobileNav({ open, setOpen }) {
           LOGO
         </a>
       </div>
-      <div className="flex flex-col ml-4 text-white">
+      <div className="flex flex-col ml-4 text-white  ">
         <a
           className="text-xl font-medium my-4"
           href="/about"
@@ -78,17 +77,14 @@ function UserDropdown({ user }) {
   };
 
   const initials = `${user.firstName[0]}${user.lastName[0]}`;
-  const imageUrl = user.avatarUrl;
+  const imageUrl = user.avatarUrl || "/uploads/default-avatar.png"; // Use the avatar URL or fallback to default avatar
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <button className="focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 rounded-full">
-          <Avatar className="cursor-pointer hover:opacity-80 transition-opacity">
-            <AvatarImage
-              src={imageUrl || "/placeholder.svg"}
-              alt={user.firstName}
-            />
+          <Avatar className="cursor-pointer hover:opacity-80 transition-opacity size-10">
+            <AvatarImage src={imageUrl} alt={user.firstName} />
             <AvatarFallback className="text-black">{initials}</AvatarFallback>
           </Avatar>
         </button>
@@ -143,7 +139,8 @@ export default function Navbar() {
   }, []);
 
   return (
-    <nav className="fixed top-0 left-0 w-full z-50 bg-[#b182dd] filter drop-shadow-md px-4 py-4 h-20 flex items-center">
+    <nav className="fixed top-0 left-0 w-full z-50 bg-[#61437e] filter drop-shadow-md px-4 py-4 h-12 flex items-center">
+      <Toaster position="top-center" reverseOrder={false} />
       {open && <MobileNav open={open} setOpen={setOpen} />}
       <div className="w-3/12 flex items-center">
         <a className="text-2xl font-semibold text-white" href="/">
