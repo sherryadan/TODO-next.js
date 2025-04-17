@@ -174,11 +174,6 @@ const AddTask = () => {
 
   return (
     <div className="max-w-4xl mx-auto p-5 mt-15">
-      <Toaster position="top-right" reverseOrder={false} />
-      <h1 className="text-3xl font-bold mb-4 text-center text-gray-400">
-        Task Manager
-      </h1>
-
       <form onSubmit={submitHandler} className="mb-5 flex flex-wrap gap-3 ">
         <div className="w-full sm:w-64">
           <input
