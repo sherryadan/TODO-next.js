@@ -179,7 +179,7 @@ const AddTask = () => {
         Task Manager
       </h1>
 
-      <form onSubmit={submitHandler} className="mb-5 flex flex-wrap gap-3">
+      <form onSubmit={submitHandler} className="mb-5 flex flex-wrap gap-3 ">
         <div className="w-full sm:w-64">
           <input
             type="text"
@@ -228,7 +228,7 @@ const AddTask = () => {
             Loading...
           </h2>
         ) : mainTasks.length > 0 ? (
-          <table className="w-full border-collapse border border-gray-300 text-xs sm:text-sm">
+          <table className="w-full border-collapse border border-gray-300 text-xs sm:text-sm bg-[90, 16,133,0.38] border-radius-16px backdrop-filter-blur-7.2px -webkit-backdrop-filter-blur-7.2px  p-4 rounded-lg shadow-lg">
             <thead>
               <tr className="bg-violet-400 text-gray-800">
                 <th className=" border-gray-400 px-4 py-2 text-center">
