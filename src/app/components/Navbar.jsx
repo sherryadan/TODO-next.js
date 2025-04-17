@@ -83,7 +83,7 @@ function UserDropdown({ user }) {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <button className="focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 rounded-full">
-          <Avatar className="cursor-pointer hover:opacity-80 transition-opacity size-10">
+          <Avatar className="cursor-pointer hover:opacity-80 transition-opacity size-11">
             <AvatarImage src={imageUrl} alt={user.firstName} />
             <AvatarFallback className="text-black">{initials}</AvatarFallback>
           </Avatar>
@@ -139,12 +139,12 @@ export default function Navbar() {
   }, []);
 
   return (
-    <nav className="fixed top-0 left-0 w-full z-50 bg-[#61437e] filter drop-shadow-md px-4 py-4 h-12 flex items-center">
+    <nav className="fixed top-0 left-0 w-full z-50 bg-[#61437e] filter drop-shadow-md px-4 py-4 h-15 flex items-center ">
       <Toaster position="top-center" reverseOrder={false} />
       {open && <MobileNav open={open} setOpen={setOpen} />}
       <div className="w-3/12 flex items-center">
         <a className="text-2xl font-semibold text-white" href="/">
-          LOGO
+          TASK MANAGER
         </a>
       </div>
       <div className="w-9/12 flex justify-end items-center">
@@ -170,8 +170,10 @@ export default function Navbar() {
           />
         </div>
         <div className="hidden md:flex text-white">
-          <NavLink to="/">HOME</NavLink>
+          <div className="flex items-center">
+          <NavLink to="/"> HOME</NavLink>
           <NavLink to="/about">ABOUT</NavLink>
+          </div>
           {user && <UserDropdown user={user} />}
         </div>
       </div>

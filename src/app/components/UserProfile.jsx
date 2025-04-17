@@ -144,7 +144,7 @@ export default function UserProfile() {
             <button
               type="button"
               onClick={() => fileInputRef.current.click()}
-              className="absolute bottom-1 right-1 bg-white p-1 rounded-full"
+              className="absolute bottom-1 right-1 bg-white p-1 rounded-full cursor-pointer hover:bg-gray-200 transition duration-200 ease-in-out"
               title="Update Avatar"
             >
               <PencilIcon className="h-4 w-4 text-black" />
@@ -154,7 +154,7 @@ export default function UserProfile() {
           {editingAvatar && (
             <Button
               onClick={handleSaveAvatar}
-              className="mt-2 bg-green-500 hover:bg-green-600 text-white py-1 px-3 rounded-sm"
+              className="mt-2 bg-green-500 hover:bg-green-600 text-white py-1 px-3 rounded-sm cursor-pointer"
             >
               <CheckIcon className="h-4 w-4 mr-1" /> Save
             </Button>
@@ -253,7 +253,7 @@ export default function UserProfile() {
           </div>
           <Button
             type="submit"
-            className="w-full mt-4 bg-[#b182dd] hover:bg-[#a072cc] text-white font-bold py-2 px-4 rounded-sm focus:outline-none"
+            className="w-full mt-4 bg-[#b182dd] hover:bg-[#a072cc] text-white font-bold py-2 px-4 rounded-sm focus:outline-none cursor-pointer"
           >
             Update
           </Button>
