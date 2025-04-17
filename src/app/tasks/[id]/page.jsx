@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { IoArrowBackCircle } from "react-icons/io5";
 import { Button } from "@/components/ui/button";
-import Navbar from "@/app/components/Navbar";
 
 
 const TaskDetails = () => {
