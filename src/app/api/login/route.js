@@ -8,6 +8,7 @@ export async function POST(request) {
   await connectionToDatabase();
 
   try {
+    
     const body = await request.json().catch(() => null);
     if (!body) {
       return NextResponse.json(
