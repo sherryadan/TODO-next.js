@@ -170,8 +170,8 @@ export default function Navbar() {
         </div>
         <div className="hidden md:flex text-white">
           <div className="flex items-center">
-            <NavLink to="/"> HOME</NavLink>
-            <NavLink to="/about">ABOUT</NavLink>
+            <NavLink to="/"> Home</NavLink>
+            <NavLink to="/about">Contact Us</NavLink>
           </div>
           {user && <UserDropdown user={user} />}
         </div>

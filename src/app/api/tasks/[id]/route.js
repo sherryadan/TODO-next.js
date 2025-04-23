@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import connectionToDatabase from "../../../../../lib/mongoosedb";
 import Task from "../../../../../models/Task";
-
 export async function PUT(request) {
   await connectionToDatabase();
 
@@ -20,7 +19,6 @@ export async function PUT(request) {
     );
   }
 }
-
 export async function DELETE(request, { params }) {
   await connectionToDatabase();
 
