@@ -323,13 +323,13 @@ const AddTask = () => {
                   {/* Action Buttons */}
                   <div className="flex justify-end gap-2">
                     <DialogClose asChild>
-                      <Button className="bg-gray-600 text-gray-300 px-4 py-2 rounded-md">
+                      <Button className="bg-gray-600 text-gray-300 px-4 py-2 rounded-md cursor-pointer">
                         Cancel
                       </Button>
                     </DialogClose>
                     <Button
                       type="submit"
-                      className="bg-violet-500 text-white px-4 py-2 rounded-md"
+                      className="bg-violet-500 text-white px-4 py-2 rounded-md cursor-pointer"
                     >
                       Save
                     </Button>
