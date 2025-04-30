@@ -27,6 +27,7 @@ const AddTask = () => {
   const [addloading, setAddLoading] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [taskToDelete, setTaskToDelete] = useState(null);
+  const [isSaving , setIsSaving] = useState(false);
 
 
   const fetchTasks = async () => {
@@ -80,8 +81,6 @@ const AddTask = () => {
 
   const submitHandler = async (e) => {
     e.preventDefault();
-    setAddLoading(true);
-
     const isValid = isDialogOpen
       ? validateInputs(dialogTitle, dialogDescription)
       : validateInputs(title, description);
@@ -92,6 +91,7 @@ const AddTask = () => {
     }
 
     if (isDialogOpen && editTaskId !== null) {
+      setIsSaving(true);
       const updatedTask = {
         _id: editTaskId,
         title: dialogTitle,
@@ -109,6 +109,7 @@ const AddTask = () => {
       setIsDialogOpen(false);
       toast.success("Task updated successfully!");
       setAddLoading(false);
+      setIsSaving(false);
     } else {
       const newTask = { title, description };
       const res = await fetch("/api/tasks", {
@@ -331,8 +332,9 @@ const AddTask = () => {
                     <Button
                       type="submit"
                       className="bg-violet-500 text-white px-4 py-2 rounded-md cursor-pointer"
+                      disabled ={isSaving}
                     >
-                      Save
+                      {isSaving ? "Saving..." : "Save"}
                     </Button>
                   </div>
                 </form>
