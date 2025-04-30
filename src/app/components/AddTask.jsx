@@ -12,6 +12,7 @@ import {
 } from "@radix-ui/react-dialog";
 import toast, { Toaster } from "react-hot-toast";
 
+
 const AddTask = () => {
   const router = useRouter();
   const [title, setTitle] = useState("");
@@ -26,6 +27,7 @@ const AddTask = () => {
   const [addloading, setAddLoading] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [taskToDelete, setTaskToDelete] = useState(null);
+
 
   const fetchTasks = async () => {
     setLoading(true);
@@ -207,7 +209,6 @@ const AddTask = () => {
           </p>
         </div>
 
-
         <Button
           type="submit"
           className="bg-black text-gray-300 px-4 rounded-md font-bold py-2 h-[42px]  hover:bg-violet-500 cursor-pointer"
@@ -371,4 +372,4 @@ const AddTask = () => {
 
 export default AddTask;
 
-// Done 
+// Done
