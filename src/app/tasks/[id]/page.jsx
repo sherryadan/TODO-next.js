@@ -4,7 +4,6 @@ import { useParams, useRouter } from "next/navigation";
 import { IoArrowBackCircle } from "react-icons/io5";
 import { Button } from "@/components/ui/button";
 
-
 const TaskDetails = () => {
   const { id } = useParams();
   const [task, setTask] = useState(null);
@@ -36,10 +35,7 @@ const TaskDetails = () => {
   }
 
   return (
-    
-    
     <div className="flex justify-center items-center  min-w-screen ">
-
       <div className="bg-[#371c5d] shadow-xl rounded-xl p-6 w-full max-w-lg text-center text-gray-300">
         <h1 className="text-3xl font-bold text-gray-300 mb-6">Task Details</h1>
 
