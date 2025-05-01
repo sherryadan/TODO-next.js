@@ -12,7 +12,7 @@ import {
   DropdownMenuItem,
   DropdownMenuGroup,
 } from "@/components/ui/dropdown-menu";
-import { FaUser, FaSignOutAlt } from "react-icons/fa"; // importing icons from react-icons
+import { FaUser, FaSignOutAlt } from "react-icons/fa"; 
 
 function NavLink({ children, to }) {
   return (
