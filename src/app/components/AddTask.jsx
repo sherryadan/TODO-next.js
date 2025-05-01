@@ -70,7 +70,7 @@ const AddTask = () => {
     e.preventDefault();
     const isValid = validateInputs(title, description);
     if (!isValid) return;
-  
+
     setAddLoading(true);
     const newTask = { title, description };
     const res = await fetch("/api/tasks", {
@@ -80,7 +80,7 @@ const AddTask = () => {
         "Content-Type": "application/json",
       },
     });
-  
+
     if (res.ok) {
       queryClient.invalidateQueries(["tasks"]);
       toast.success("Task added successfully!");
@@ -89,15 +89,15 @@ const AddTask = () => {
     } else {
       toast.error("Failed to add task");
     }
-  
+
     setAddLoading(false);
   };
-  
+
   const handleEditSubmit = async (e) => {
     e.preventDefault();
     const isValid = validateInputs(dialogTitle, dialogDescription);
     if (!isValid) return;
-  
+
     setIsSaving(true);
     const updatedTask = {
       _id: editTaskId,
@@ -119,7 +119,6 @@ const AddTask = () => {
     setDialogTitle("");
     setDialogDescription("");
   };
-  
 
   const openDeleteDialog = (task) => {
     setTaskToDelete(task);
