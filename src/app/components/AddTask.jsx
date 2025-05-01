@@ -66,60 +66,60 @@ const AddTask = () => {
     return isValid;
   };
 
-  const submitHandler = async (e) => {
+  const handleAddSubmit = async (e) => {
     e.preventDefault();
-    const isValid = isDialogOpen
-      ? validateInputs(dialogTitle, dialogDescription)
-      : validateInputs(title, description);
-
+    const isValid = validateInputs(title, description);
     if (!isValid) return;
-
+  
     setAddLoading(true);
-
-    if (isDialogOpen && editTaskId !== null) {
-      setIsSaving(true);
-      const updatedTask = {
-        _id: editTaskId,
-        title: dialogTitle,
-        description: dialogDescription,
-      };
-      await fetch(`/api/tasks/${editTaskId}`, {
-        method: "PUT",
-        body: JSON.stringify(updatedTask),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+    const newTask = { title, description };
+    const res = await fetch("/api/tasks", {
+      method: "POST",
+      body: JSON.stringify(newTask),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+  
+    if (res.ok) {
       queryClient.invalidateQueries(["tasks"]);
-      toast.success("Task updated successfully!");
-      setIsDialogOpen(false);
-      setEditTaskId(null);
-      setIsSaving(false);
+      toast.success("Task added successfully!");
+      setTitle("");
+      setDescription("");
     } else {
-      const newTask = { title, description };
-      const res = await fetch("/api/tasks", {
-        method: "POST",
-        body: JSON.stringify(newTask),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      if (res.ok) {
-        queryClient.invalidateQueries(["tasks"]);
-        toast.success("Task added successfully!");
-      } else {
-        toast.error("Failed to add task");
-      }
+      toast.error("Failed to add task");
     }
-
+  
     setAddLoading(false);
-    setTitle("");
-    setDescription("");
+  };
+  
+  const handleEditSubmit = async (e) => {
+    e.preventDefault();
+    const isValid = validateInputs(dialogTitle, dialogDescription);
+    if (!isValid) return;
+  
+    setIsSaving(true);
+    const updatedTask = {
+      _id: editTaskId,
+      title: dialogTitle,
+      description: dialogDescription,
+    };
+    await fetch(`/api/tasks/${editTaskId}`, {
+      method: "PUT",
+      body: JSON.stringify(updatedTask),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    queryClient.invalidateQueries(["tasks"]);
+    toast.success("Task updated successfully!");
+    setIsSaving(false);
+    setIsDialogOpen(false);
+    setEditTaskId(null);
     setDialogTitle("");
     setDialogDescription("");
-    setErrors({ title: "", description: "" });
   };
+  
 
   const openDeleteDialog = (task) => {
     setTaskToDelete(task);
@@ -159,7 +159,7 @@ const AddTask = () => {
 
   return (
     <div className="max-w-4xl mx-auto p-5 mt-15">
-      <form onSubmit={submitHandler} className="mb-5 flex flex-wrap gap-3 ">
+      <form onSubmit={handleAddSubmit} className="mb-5 flex flex-wrap gap-3 ">
         <div className="w-full sm:w-64">
           <input
             type="text"
@@ -274,7 +274,7 @@ const AddTask = () => {
                 <DialogTitle className="text-lg font-bold text-gray-300">
                   Edit Task
                 </DialogTitle>
-                <form onSubmit={submitHandler} className="space-y-4">
+                <form onSubmit={handleEditSubmit} className="space-y-4">
                   {/* Title Input */}
                   <div>
                     <label className="block text-sm font-medium text-gray-300">
