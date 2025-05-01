@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { MdDelete, MdEdit, MdRemoveRedEye } from "react-icons/md";
 import { ImSpinner6 } from "react-icons/im";
 import { useRouter } from "next/navigation";
@@ -10,46 +10,35 @@ import {
   DialogTitle,
   DialogClose,
 } from "@radix-ui/react-dialog";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+
+const fetchTasks = async () => {
+  const res = await fetch("/api/tasks");
+  if (!res.ok) throw new Error("Failed to fetch tasks");
+  return res.json();
+};
 
 const AddTask = () => {
   const router = useRouter();
+  const queryClient = useQueryClient();
+
+  const { data: mainTasks = [], isLoading: loading } = useQuery({
+    queryKey: ["tasks"],
+    queryFn: fetchTasks,
+  });
+
   const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
   const [dialogTitle, setDialogTitle] = useState("");
   const [dialogDescription, setDialogDescription] = useState("");
-  const [description, setDescription] = useState("");
-  const [mainTasks, setTasks] = useState([]);
   const [editTaskId, setEditTaskId] = useState(null);
-  const [loading, setLoading] = useState(true);
   const [errors, setErrors] = useState({ title: "", description: "" });
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [addloading, setAddLoading] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [taskToDelete, setTaskToDelete] = useState(null);
   const [isSaving, setIsSaving] = useState(false);
-
-  const fetchTasks = async () => {
-    setLoading(true);
-    try {
-      const res = await fetch("/api/tasks");
-      const data = await res.json();
-
-      if (Array.isArray(data)) {
-        setTasks(data);
-      } else {
-        console.error("API did not return an array:", data);
-        setTasks([]);
-      }
-    } catch (error) {
-      console.error("Error fetching tasks:", error);
-      setTasks([]);
-    }
-    setLoading(false);
-  };
-
-  useEffect(() => {
-    fetchTasks();
-  }, []);
 
   const validateInputs = (titleToValidate, descriptionToValidate) => {
     let isValid = true;
@@ -83,10 +72,9 @@ const AddTask = () => {
       ? validateInputs(dialogTitle, dialogDescription)
       : validateInputs(title, description);
 
-    if (!isValid) {
-      setAddLoading(false);
-      return;
-    }
+    if (!isValid) return;
+
+    setAddLoading(true);
 
     if (isDialogOpen && editTaskId !== null) {
       setIsSaving(true);
@@ -102,11 +90,10 @@ const AddTask = () => {
           "Content-Type": "application/json",
         },
       });
-      fetchTasks();
-      setEditTaskId(null);
-      setIsDialogOpen(false);
+      queryClient.invalidateQueries(["tasks"]);
       toast.success("Task updated successfully!");
-      setAddLoading(false);
+      setIsDialogOpen(false);
+      setEditTaskId(null);
       setIsSaving(false);
     } else {
       const newTask = { title, description };
@@ -119,15 +106,14 @@ const AddTask = () => {
       });
 
       if (res.ok) {
-        const createdTask = await res.json();
-        setTasks([...mainTasks, createdTask]);
+        queryClient.invalidateQueries(["tasks"]);
         toast.success("Task added successfully!");
       } else {
-        toast.error(errorData.message || "Failed to add task");
+        toast.error("Failed to add task");
       }
     }
-    setAddLoading(false);
 
+    setAddLoading(false);
     setTitle("");
     setDescription("");
     setDialogTitle("");
@@ -146,12 +132,9 @@ const AddTask = () => {
         await fetch(`/api/tasks/${taskToDelete._id}`, {
           method: "DELETE",
         });
-        setTasks((prevTasks) =>
-          prevTasks.filter((task) => task._id !== taskToDelete._id)
-        );
+        queryClient.invalidateQueries(["tasks"]);
         toast.success("Task deleted successfully!");
       } catch (error) {
-        console.error("Error deleting task:", error);
         toast.error("Failed to delete task.");
       } finally {
         setIsDeleteDialogOpen(false);
@@ -166,6 +149,7 @@ const AddTask = () => {
     setDialogDescription(task.description);
     setIsDialogOpen(true);
   };
+
   const truncateDescription = (text, wordLimit = 3) => {
     const words = text.split(" ");
     return words.length > wordLimit
