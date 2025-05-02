@@ -117,6 +117,32 @@ export default function UserProfile() {
     }
   };
 
+  const handleDeleteAvatar = async () => {
+  const userId = user._id;
+
+  try {
+    const res = await fetch(`/api/deletephoto?userId=${userId}`, {
+      method: "DELETE",
+    });
+
+    if (res.ok) {
+      toast.success("Avatar deleted");
+      setUser((prevUser) => ({
+        ...prevUser,
+        avatarUrl: "",
+      }));
+      setPreview(null);
+      setAvatar(null);
+      setEditingAvatar(false);
+    } else {
+      toast.error("Failed to delete avatar");
+    }
+  } catch (err) {
+    console.error(err);
+    toast.error("Error deleting avatar");
+  }
+};
+
 
   const handleFormSubmit = async (data) => {
     try {
