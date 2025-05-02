@@ -8,7 +8,7 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
 import toast, { Toaster } from "react-hot-toast";
 
-// ✅ Zod schema
+//  Zod schema
 const loginSchema = z.object({
   email: z.string().email("Enter a valid email (e.g., user@domain.com)"),
   password: z.string().min(8, "Password must be at least 8 characters"),

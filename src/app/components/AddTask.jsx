@@ -209,9 +209,15 @@ const AddTask = () => {
           <table className="w-full border-collapse border border-gray-300 text-xs sm:text-sm bg-[90, 16,133,0.38] border-radius-16px backdrop-filter-blur-7.2px -webkit-backdrop-filter-blur-7.2px  p-4 rounded-lg shadow-lg">
             <thead>
               <tr className="bg-violet-400 text-gray-800">
-                <th className=" border-gray-400 px-4 py-2 text-center">Title</th>
-                <th className=" border-gray-400 px-4 py-2 text-center">Description</th>
-                <th className="border-gray-400 px-4 py-2 text-center">Action</th>
+                <th className=" border-gray-400 px-4 py-2 text-center">
+                  Title
+                </th>
+                <th className=" border-gray-400 px-4 py-2 text-center">
+                  Description
+                </th>
+                <th className="border-gray-400 px-4 py-2 text-center">
+                  Action
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -248,7 +254,9 @@ const AddTask = () => {
             </tbody>
           </table>
         ) : (
-          <h2 className="text-center text-lg font-semibold">No Task Available</h2>
+          <h2 className="text-center text-lg font-semibold">
+            No Task Available
+          </h2>
         )}
       </div>
 
@@ -261,7 +269,10 @@ const AddTask = () => {
                 <DialogTitle className="text-lg font-bold text-gray-300">
                   Edit Task
                 </DialogTitle>
-                <form onSubmit={handleSubmit(handleEditSubmit)} className="space-y-4">
+                <form
+                  onSubmit={handleSubmit(handleEditSubmit)}
+                  className="space-y-4"
+                >
                   <div>
                     <label className="block text-sm font-medium text-gray-300">
                       Title
@@ -279,7 +290,9 @@ const AddTask = () => {
                         />
                       )}
                     />
-                    <p className="text-red-500 text-xs mt-1">{errors.title?.message}</p>
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.title?.message}
+                    </p>
                   </div>
 
                   <div>

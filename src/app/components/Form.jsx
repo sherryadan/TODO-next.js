@@ -9,34 +9,39 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 // Zod Schema
-const formSchema = z.object({
-  firstName: z
-    .string()
-    .min(1, "First Name is required")
-    .regex(/^[^\d]+$/, "Invalid first name"),
-  lastName: z
-    .string()
-    .min(1, "Last Name is required")
-    .regex(/^[^\d]+$/, "Invalid last name"),
-  company: z.string().min(1, "Company name is required"),
-  phone: z
-    .string()
-    .min(1, "Phone number is required")
-    .regex(/^\+92\d{10}$/, "Invalid phone number format (e.g., +923001234567)"),
-  website: z
-    .string()
-    .min(1, "Website URL is required")
-    .url("Enter a valid URL (e.g., https://example.com)"),
-  email: z
-    .string()
-    .min(1, "Email is required")
-    .email("Enter a valid email (e.g., user@domain.com)"),
-  password: z.string().min(8, "Password must be at least 8 characters"),
-  confirmPassword: z.string().min(1, "Please confirm your password"),
-}).refine((data) => data.password === data.confirmPassword, {
-  path: ["confirmPassword"],
-  message: "Passwords do not match",
-});
+const formSchema = z
+  .object({
+    firstName: z
+      .string()
+      .min(1, "First Name is required")
+      .regex(/^[^\d]+$/, "Invalid first name"),
+    lastName: z
+      .string()
+      .min(1, "Last Name is required")
+      .regex(/^[^\d]+$/, "Invalid last name"),
+    company: z.string().min(1, "Company name is required"),
+    phone: z
+      .string()
+      .min(1, "Phone number is required")
+      .regex(
+        /^\+92\d{10}$/,
+        "Invalid phone number format (e.g., +923001234567)"
+      ),
+    website: z
+      .string()
+      .min(1, "Website URL is required")
+      .url("Enter a valid URL (e.g., https://example.com)"),
+    email: z
+      .string()
+      .min(1, "Email is required")
+      .email("Enter a valid email (e.g., user@domain.com)"),
+    password: z.string().min(8, "Password must be at least 8 characters"),
+    confirmPassword: z.string().min(1, "Please confirm your password"),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    path: ["confirmPassword"],
+    message: "Passwords do not match",
+  });
 
 const Form = () => {
   const router = useRouter();
@@ -82,43 +87,57 @@ const Form = () => {
     <div className="flex justify-center items-center bg-gradient-to-r w-lg min-h-screen">
       <Toaster position="top-center" reverseOrder={false} />
       <div className="bg-[#100224] p-8 rounded-lg shadow-lg w-full max-w-lg mb-5">
-        <h1 className="text-2xl font-bold text-center mb-4 text-gray-300">Create an account</h1>
+        <h1 className="text-2xl font-bold text-center mb-4 text-gray-300">
+          Create an account
+        </h1>
 
         <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="text-sm font-medium text-gray-300">First Name</label>
+              <label className="text-sm font-medium text-gray-300">
+                First Name
+              </label>
               <input
                 type="text"
                 className="mt-1 h-9 w-full p-3 border text-amber-50 border-gray-300 rounded-sm shadow-sm focus:outline-0 placeholder-gray-600"
                 placeholder="Enter your first name"
                 {...register("firstName")}
               />
-              <p className="text-red-500 text-xs mt-1 min-h-[17px]">{errors.firstName?.message}</p>
+              <p className="text-red-500 text-xs mt-1 min-h-[17px]">
+                {errors.firstName?.message}
+              </p>
             </div>
 
             <div>
-              <label className="text-sm font-medium text-gray-300">Last Name</label>
+              <label className="text-sm font-medium text-gray-300">
+                Last Name
+              </label>
               <input
                 type="text"
                 className="mt-1 h-9 w-full p-3 border text-amber-50 border-gray-300 rounded-sm shadow-sm focus:outline-0 placeholder-gray-600"
                 placeholder="Enter your last name"
                 {...register("lastName")}
               />
-              <p className="text-red-500 text-xs mt-1 min-h-[17px]">{errors.lastName?.message}</p>
+              <p className="text-red-500 text-xs mt-1 min-h-[17px]">
+                {errors.lastName?.message}
+              </p>
             </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="text-sm font-medium text-gray-300">Company</label>
+              <label className="text-sm font-medium text-gray-300">
+                Company
+              </label>
               <input
                 type="text"
                 className="mt-1 h-9 w-full p-3 border text-amber-50 border-gray-300 rounded-sm shadow-sm focus:outline-0 placeholder-gray-600"
                 placeholder="Enter your company name"
                 {...register("company")}
               />
-              <p className="text-red-500 text-xs mt-1 min-h-[17px]">{errors.company?.message}</p>
+              <p className="text-red-500 text-xs mt-1 min-h-[17px]">
+                {errors.company?.message}
+              </p>
             </div>
 
             <div>
@@ -129,7 +148,9 @@ const Form = () => {
                 placeholder="Enter your phone number"
                 {...register("phone")}
               />
-              <p className="text-red-500 text-xs mt-1 min-h-[17px]">{errors.phone?.message}</p>
+              <p className="text-red-500 text-xs mt-1 min-h-[17px]">
+                {errors.phone?.message}
+              </p>
             </div>
           </div>
 
@@ -141,7 +162,9 @@ const Form = () => {
               placeholder="Enter your website URL"
               {...register("website")}
             />
-            <p className="text-red-500 text-xs mt-1 min-h-[17px]">{errors.website?.message}</p>
+            <p className="text-red-500 text-xs mt-1 min-h-[17px]">
+              {errors.website?.message}
+            </p>
           </div>
 
           <div>
@@ -152,11 +175,15 @@ const Form = () => {
               placeholder="Enter your email"
               {...register("email")}
             />
-            <p className="text-red-500 text-xs mt-1 min-h-[17px]">{errors.email?.message}</p>
+            <p className="text-red-500 text-xs mt-1 min-h-[17px]">
+              {errors.email?.message}
+            </p>
           </div>
 
           <div>
-            <label className="text-sm font-medium text-gray-300">Password</label>
+            <label className="text-sm font-medium text-gray-300">
+              Password
+            </label>
             <div className="relative">
               <input
                 type={showPassword ? "text" : "password"}
@@ -171,18 +198,24 @@ const Form = () => {
                 {showPassword ? <FaEyeSlash /> : <FaEye />}
               </span>
             </div>
-            <p className="text-red-500 text-xs mt-1 min-h-[17px]">{errors.password?.message}</p>
+            <p className="text-red-500 text-xs mt-1 min-h-[17px]">
+              {errors.password?.message}
+            </p>
           </div>
 
           <div>
-            <label className="text-sm font-medium text-gray-300">Confirm Password</label>
+            <label className="text-sm font-medium text-gray-300">
+              Confirm Password
+            </label>
             <input
               type="password"
               className="mt-1 h-9 w-full p-3 border text-amber-50 border-gray-300 rounded-sm shadow-sm focus:outline-0 placeholder-gray-600"
               placeholder="Re-enter your password"
               {...register("confirmPassword")}
             />
-            <p className="text-red-500 text-xs mt-1 min-h-[17px]">{errors.confirmPassword?.message}</p>
+            <p className="text-red-500 text-xs mt-1 min-h-[17px]">
+              {errors.confirmPassword?.message}
+            </p>
           </div>
 
           <div className="flex justify-end gap-2">
@@ -198,7 +231,10 @@ const Form = () => {
 
         <p className="mt-2 text-xs text-gray-600">
           Already have an account?{" "}
-          <span className="text-blue-500 cursor-pointer" onClick={() => router.push("/login")}>
+          <span
+            className="text-blue-500 cursor-pointer"
+            onClick={() => router.push("/login")}
+          >
             Login
           </span>
         </p>

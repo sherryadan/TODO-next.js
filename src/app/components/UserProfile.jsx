@@ -198,7 +198,9 @@ export default function UserProfile() {
                 className="mt-1 h-9 block w-full p-3 border text-amber-50 border-gray-300 rounded-sm shadow-sm focus:outline-0 placeholder-gray-600"
               />
               {errors.firstName && (
-                <p className="text-red-500 text-xs">{errors.firstName.message}</p>
+                <p className="text-red-500 text-xs">
+                  {errors.firstName.message}
+                </p>
               )}
             </div>
             <div>
@@ -211,7 +213,9 @@ export default function UserProfile() {
                 className="mt-1 h-9 block w-full p-3 border text-amber-50 border-gray-300 rounded-sm shadow-sm focus:outline-0 placeholder-gray-600"
               />
               {errors.lastName && (
-                <p className="text-red-500 text-xs">{errors.lastName.message}</p>
+                <p className="text-red-500 text-xs">
+                  {errors.lastName.message}
+                </p>
               )}
             </div>
           </div>
