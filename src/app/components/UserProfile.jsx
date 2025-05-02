@@ -117,6 +117,7 @@ export default function UserProfile() {
     }
   };
 
+
   const handleFormSubmit = async (data) => {
     try {
       const response = await fetch("/api/update", {
