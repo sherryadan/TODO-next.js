@@ -194,7 +194,6 @@ export default function UserProfile() {
               </label>
               <input
                 type="text"
-                name="firstName"
                 {...register("firstName")}
                 className="mt-1 h-9 block w-full p-3 border text-amber-50 border-gray-300 rounded-sm shadow-sm focus:outline-0 placeholder-gray-600"
               />
@@ -208,7 +207,6 @@ export default function UserProfile() {
               </label>
               <input
                 type="text"
-                name="lastName"
                 {...register("lastName")}
                 className="mt-1 h-9 block w-full p-3 border text-amber-50 border-gray-300 rounded-sm shadow-sm focus:outline-0 placeholder-gray-600"
               />
@@ -224,7 +222,6 @@ export default function UserProfile() {
               </label>
               <input
                 type="text"
-                name="company"
                 {...register("company")}
                 className="mt-1 h-9 block w-full p-3 border text-amber-50 border-gray-300 rounded-sm shadow-sm focus:outline-0 placeholder-gray-600"
               />
@@ -235,7 +232,6 @@ export default function UserProfile() {
               </label>
               <input
                 type="text"
-                name="phone"
                 {...register("phone")}
                 className="mt-1 h-9 block w-full p-3 border text-amber-50 border-gray-300 rounded-sm shadow-sm focus:outline-0 placeholder-gray-600"
               />
@@ -247,7 +243,6 @@ export default function UserProfile() {
             </label>
             <input
               type="text"
-              name="website"
               {...register("website")}
               className="mt-1 h-9 block w-full p-3 border text-amber-50 border-gray-300 rounded-sm shadow-sm focus:outline-0 placeholder-gray-600"
             />
@@ -258,7 +253,6 @@ export default function UserProfile() {
             </label>
             <input
               type="email"
-              name="email"
               {...register("email")}
               className="mt-1 h-9 block w-full p-3 border text-amber-50 border-gray-300 rounded-sm shadow-sm focus:outline-0 placeholder-gray-600"
             />
