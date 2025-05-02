@@ -1,9 +1,21 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { Button } from "@/components/ui/button";
 import { PencilIcon, CheckIcon } from "@heroicons/react/24/solid";
-import { useRef } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+// Zod schema for validation
+const userSchema = z.object({
+  firstName: z.string().min(1, "First name is required"),
+  lastName: z.string().min(1, "Last name is required"),
+  email: z.string().email("Invalid email address").min(1, "Email is required"),
+  phone: z.string().optional(),
+  company: z.string().optional(),
+  website: z.string().optional(),
+});
 
 export default function UserProfile() {
   const [user, setUser] = useState({
@@ -21,6 +33,16 @@ export default function UserProfile() {
 
   const fileInputRef = useRef(null);
 
+  // UseForm hook with zodResolver
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setValue,
+  } = useForm({
+    resolver: zodResolver(userSchema),
+  });
+
   useEffect(() => {
     async function fetchUserData() {
       try {
@@ -28,6 +50,14 @@ export default function UserProfile() {
         if (response.ok) {
           const data = await response.json();
           setUser(data);
+
+          // Populate form fields with fetched data
+          setValue("firstName", data.firstName);
+          setValue("lastName", data.lastName);
+          setValue("email", data.email);
+          setValue("phone", data.phone);
+          setValue("company", data.company);
+          setValue("website", data.website);
 
           if (data.avatarUrl) {
             setPreview(data.avatarUrl);
@@ -41,12 +71,11 @@ export default function UserProfile() {
       }
     }
     fetchUserData();
-  }, []);
+  }, [setValue]);
 
   const getInitials = () => {
     const { firstName, lastName } = user;
-    if (!firstName && !lastName)
-      return `${firstName?.[0] || ""}${lastName?.[0] || ""}`.toUpperCase();
+    return `${firstName?.[0] || ""}${lastName?.[0] || ""}`.toUpperCase();
   };
 
   const handleImageChange = (e) => {
@@ -88,24 +117,14 @@ export default function UserProfile() {
     }
   };
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setUser((prevUser) => ({
-      ...prevUser,
-      [name]: value,
-    }));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
+  const handleFormSubmit = async (data) => {
     try {
       const response = await fetch("/api/update", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(user),
+        body: JSON.stringify(data),
       });
 
       const result = await response.json();
@@ -167,7 +186,7 @@ export default function UserProfile() {
             className="hidden"
           />
         </div>
-        <form className="space-y-4" onSubmit={handleSubmit}>
+        <form className="space-y-4" onSubmit={handleSubmit(handleFormSubmit)}>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-300">
@@ -176,11 +195,12 @@ export default function UserProfile() {
               <input
                 type="text"
                 name="firstName"
-                value={user.firstName}
-                onChange={handleChange}
-                placeholder="Enter your first name"
+                {...register("firstName")}
                 className="mt-1 h-9 block w-full p-3 border text-amber-50 border-gray-300 rounded-sm shadow-sm focus:outline-0 placeholder-gray-600"
               />
+              {errors.firstName && (
+                <p className="text-red-500 text-xs">{errors.firstName.message}</p>
+              )}
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-300">
@@ -189,11 +209,12 @@ export default function UserProfile() {
               <input
                 type="text"
                 name="lastName"
-                value={user.lastName}
-                onChange={handleChange}
-                placeholder="Enter your last name"
+                {...register("lastName")}
                 className="mt-1 h-9 block w-full p-3 border text-amber-50 border-gray-300 rounded-sm shadow-sm focus:outline-0 placeholder-gray-600"
               />
+              {errors.lastName && (
+                <p className="text-red-500 text-xs">{errors.lastName.message}</p>
+              )}
             </div>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -204,9 +225,7 @@ export default function UserProfile() {
               <input
                 type="text"
                 name="company"
-                value={user.company}
-                onChange={handleChange}
-                placeholder="Enter your company name"
+                {...register("company")}
                 className="mt-1 h-9 block w-full p-3 border text-amber-50 border-gray-300 rounded-sm shadow-sm focus:outline-0 placeholder-gray-600"
               />
             </div>
@@ -217,9 +236,7 @@ export default function UserProfile() {
               <input
                 type="text"
                 name="phone"
-                value={user.phone}
-                onChange={handleChange}
-                placeholder="Enter your phone number"
+                {...register("phone")}
                 className="mt-1 h-9 block w-full p-3 border text-amber-50 border-gray-300 rounded-sm shadow-sm focus:outline-0 placeholder-gray-600"
               />
             </div>
@@ -231,9 +248,7 @@ export default function UserProfile() {
             <input
               type="text"
               name="website"
-              value={user.website}
-              onChange={handleChange}
-              placeholder="Enter your website URL"
+              {...register("website")}
               className="mt-1 h-9 block w-full p-3 border text-amber-50 border-gray-300 rounded-sm shadow-sm focus:outline-0 placeholder-gray-600"
             />
           </div>
@@ -244,11 +259,12 @@ export default function UserProfile() {
             <input
               type="email"
               name="email"
-              value={user.email}
-              onChange={handleChange}
-              placeholder="Enter your email"
+              {...register("email")}
               className="mt-1 h-9 block w-full p-3 border text-amber-50 border-gray-300 rounded-sm shadow-sm focus:outline-0 placeholder-gray-600"
             />
+            {errors.email && (
+              <p className="text-red-500 text-xs">{errors.email.message}</p>
+            )}
           </div>
           <Button
             type="submit"
@@ -261,5 +277,3 @@ export default function UserProfile() {
     </div>
   );
 }
-
-// Done

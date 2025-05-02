@@ -12,6 +12,18 @@ import {
 } from "@radix-ui/react-dialog";
 import toast from "react-hot-toast";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useForm, Controller } from "react-hook-form";
+import * as z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+// Validation schema with Zod
+const taskSchema = z.object({
+  title: z.string().min(1, "Title Required").regex(/^\D*$/, "Invalid Title"),
+  description: z
+    .string()
+    .min(1, "Description Required")
+    .regex(/^\D*$/, "Invalid Description"),
+});
 
 const fetchTasks = async () => {
   const res = await fetch("/api/tasks");
@@ -28,54 +40,33 @@ const AddTask = () => {
     queryFn: fetchTasks,
   });
 
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
+  const {
+    handleSubmit,
+    control,
+    setValue,
+    formState: { errors, isSubmitting },
+  } = useForm({
+    resolver: zodResolver(taskSchema),
+    defaultValues: {
+      title: "",
+      description: "",
+    },
+  });
+
   const [dialogTitle, setDialogTitle] = useState("");
   const [dialogDescription, setDialogDescription] = useState("");
   const [editTaskId, setEditTaskId] = useState(null);
-  const [errors, setErrors] = useState({ title: "", description: "" });
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [addloading, setAddLoading] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [taskToDelete, setTaskToDelete] = useState(null);
   const [isSaving, setIsSaving] = useState(false);
 
-  const validateInputs = (titleToValidate, descriptionToValidate) => {
-    let isValid = true;
-    let newErrors = { title: "", description: "" };
+  const handleAddSubmit = async (data) => {
+    setIsSaving(true);
 
-    if (/^\d+$/.test(titleToValidate)) {
-      newErrors.title = "Invalid Title";
-      isValid = false;
-    }
-    if (!titleToValidate.trim()) {
-      newErrors.title = "Title Required";
-      isValid = false;
-    }
-
-    if (/^\d+$/.test(descriptionToValidate)) {
-      newErrors.description = "Invalid Description";
-      isValid = false;
-    }
-    if (!descriptionToValidate.trim()) {
-      newErrors.description = "Description Required";
-      isValid = false;
-    }
-
-    setErrors(newErrors);
-    return isValid;
-  };
-
-  const handleAddSubmit = async (e) => {
-    e.preventDefault();
-    const isValid = validateInputs(title, description);
-    if (!isValid) return;
-
-    setAddLoading(true);
-    const newTask = { title, description };
     const res = await fetch("/api/tasks", {
       method: "POST",
-      body: JSON.stringify(newTask),
+      body: JSON.stringify(data),
       headers: {
         "Content-Type": "application/json",
       },
@@ -84,25 +75,22 @@ const AddTask = () => {
     if (res.ok) {
       queryClient.invalidateQueries(["tasks"]);
       toast.success("Task added successfully!");
-      setTitle("");
-      setDescription("");
+      setValue("title", "");
+      setValue("description", "");
     } else {
       toast.error("Failed to add task");
     }
 
-    setAddLoading(false);
+    setIsSaving(false);
   };
 
-  const handleEditSubmit = async (e) => {
-    e.preventDefault();
-    const isValid = validateInputs(dialogTitle, dialogDescription);
-    if (!isValid) return;
-
+  const handleEditSubmit = async (data) => {
     setIsSaving(true);
+
     const updatedTask = {
       _id: editTaskId,
-      title: dialogTitle,
-      description: dialogDescription,
+      title: data.title,
+      description: data.description,
     };
     await fetch(`/api/tasks/${editTaskId}`, {
       method: "PUT",
@@ -158,49 +146,60 @@ const AddTask = () => {
 
   return (
     <div className="max-w-4xl mx-auto p-5 mt-15">
-      <form onSubmit={handleAddSubmit} className="mb-5 flex flex-wrap gap-3 ">
+      <form
+        onSubmit={handleSubmit(handleAddSubmit)}
+        className="mb-5 flex flex-wrap gap-3"
+      >
         <div className="w-full sm:w-64">
-          <input
-            type="text"
-            className="border-1 px-3 py-2 w-full border-violet-800 placeholder-gray-500 text-gray-400 rounded-md"
-            placeholder="Enter Task Title"
-            value={title}
-            onChange={(e) => {
-              setTitle(e.target.value);
-              setErrors((prevErrors) => ({ ...prevErrors, title: "" }));
-            }}
+          <Controller
+            name="title"
+            control={control}
+            render={({ field }) => (
+              <>
+                <input
+                  {...field}
+                  type="text"
+                  className="border-1 px-3 py-2 w-full border-violet-800 placeholder-gray-500 text-gray-400 rounded-md"
+                  placeholder="Enter Task Title"
+                />
+                <p className="text-red-500 text-xs min-h-[20px]">
+                  {errors.title?.message || " "}
+                </p>
+              </>
+            )}
           />
-          <p className="text-red-500 text-xs min-h-[20px]">
-            {errors.title || " "}
-          </p>
         </div>
 
         <div className="w-full sm:w-64">
-          <input
-            type="text"
-            className="border-1 px-3 py-2 w-full border-violet-800 placeholder-gray-500 text-gray-400 rounded-md"
-            placeholder="Enter Description"
-            value={description}
-            onChange={(e) => {
-              setDescription(e.target.value);
-              setErrors((prevErrors) => ({ ...prevErrors, description: "" }));
-            }}
+          <Controller
+            name="description"
+            control={control}
+            render={({ field }) => (
+              <>
+                <input
+                  {...field}
+                  type="text"
+                  className="border-1 px-3 py-2 w-full border-violet-800 placeholder-gray-500 text-gray-400 rounded-md"
+                  placeholder="Enter Description"
+                />
+                <p className="text-red-500 text-xs min-h-[20px]">
+                  {errors.description?.message || " "}
+                </p>
+              </>
+            )}
           />
-          <p className="text-red-500 text-xs min-h-[20px]">
-            {errors.description || " "}
-          </p>
         </div>
 
         <Button
           type="submit"
-          className="bg-black text-gray-300 px-4 rounded-md font-bold py-2 h-[42px]  hover:bg-violet-500 cursor-pointer"
-          disabled={addloading}
+          className="bg-black text-gray-300 px-4 rounded-md font-bold py-2 h-[42px] hover:bg-violet-500 cursor-pointer"
+          disabled={isSubmitting || isSaving}
         >
-          {addloading ? "Adding..." : "Add Task"}
+          {isSubmitting || isSaving ? "Adding..." : "Add Task"}
         </Button>
       </form>
 
-      <div className=" p-2 rounded-lg text-amber-50 overflow-x-auto ">
+      <div className="p-2 rounded-lg text-amber-50 overflow-x-auto">
         {loading ? (
           <h2 className="text-center text-lg font-semibold flex items-center justify-center">
             <ImSpinner6 className="animate-spin text-2xl mr-2" />
@@ -210,15 +209,9 @@ const AddTask = () => {
           <table className="w-full border-collapse border border-gray-300 text-xs sm:text-sm bg-[90, 16,133,0.38] border-radius-16px backdrop-filter-blur-7.2px -webkit-backdrop-filter-blur-7.2px  p-4 rounded-lg shadow-lg">
             <thead>
               <tr className="bg-violet-400 text-gray-800">
-                <th className=" border-gray-400 px-4 py-2 text-center">
-                  Title
-                </th>
-                <th className=" border-gray-400 px-4 py-2 text-center">
-                  Description
-                </th>
-                <th className="border-gray-400 px-4 py-2 text-center">
-                  Action
-                </th>
+                <th className=" border-gray-400 px-4 py-2 text-center">Title</th>
+                <th className=" border-gray-400 px-4 py-2 text-center">Description</th>
+                <th className="border-gray-400 px-4 py-2 text-center">Action</th>
               </tr>
             </thead>
             <tbody>
@@ -255,55 +248,61 @@ const AddTask = () => {
             </tbody>
           </table>
         ) : (
-          <h2 className="text-center text-lg font-semibold">
-            No Task Available
-          </h2>
+          <h2 className="text-center text-lg font-semibold">No Task Available</h2>
         )}
       </div>
 
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         {isDialogOpen && (
           <>
-            {/* Backdrop */}
             <div className="fixed inset-0 bg-black/60 z-40"></div>
-
-            {/* Dialog Content */}
             <DialogContent className="fixed inset-0 flex items-center justify-center z-50">
               <div className="bg-[#1e1728] p-6 rounded-md shadow-lg w-full max-w-md">
                 <DialogTitle className="text-lg font-bold text-gray-300">
                   Edit Task
                 </DialogTitle>
-                <form onSubmit={handleEditSubmit} className="space-y-4">
-                  {/* Title Input */}
+                <form onSubmit={handleSubmit(handleEditSubmit)} className="space-y-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-300">
                       Title
                     </label>
-                    <input
-                      type="text"
-                      className="mt-1 block w-full p-2 border border-gray-600 rounded-md bg-[#1e1728] text-gray-300"
-                      value={dialogTitle}
-                      onChange={(e) => setDialogTitle(e.target.value)}
+                    <Controller
+                      name="title"
+                      control={control}
+                      render={({ field }) => (
+                        <input
+                          {...field}
+                          type="text"
+                          className="mt-1 block w-full p-2 border border-gray-600 rounded-md bg-[#1e1728] text-gray-300"
+                          value={dialogTitle}
+                          onChange={(e) => setDialogTitle(e.target.value)}
+                        />
+                      )}
                     />
-                    <p className="text-red-500 text-xs mt-1">{errors.title}</p>
+                    <p className="text-red-500 text-xs mt-1">{errors.title?.message}</p>
                   </div>
 
-                  {/* Description Input */}
                   <div>
                     <label className="block text-sm font-medium text-gray-300">
                       Description
                     </label>
-                    <textarea
-                      className="mt-1 block w-full p-2 border border-gray-600 rounded-md bg-[#1e1728] text-gray-300"
-                      value={dialogDescription}
-                      onChange={(e) => setDialogDescription(e.target.value)}
+                    <Controller
+                      name="description"
+                      control={control}
+                      render={({ field }) => (
+                        <textarea
+                          {...field}
+                          className="mt-1 block w-full p-2 border border-gray-600 rounded-md bg-[#1e1728] text-gray-300"
+                          value={dialogDescription}
+                          onChange={(e) => setDialogDescription(e.target.value)}
+                        />
+                      )}
                     />
                     <p className="text-red-500 text-xs mt-1">
-                      {errors.description}
+                      {errors.description?.message}
                     </p>
                   </div>
 
-                  {/* Action Buttons */}
                   <div className="flex justify-end gap-2">
                     <DialogClose asChild>
                       <Button className="bg-gray-600 text-gray-300 px-4 py-2 rounded-md cursor-pointer">
@@ -324,6 +323,7 @@ const AddTask = () => {
           </>
         )}
       </Dialog>
+
       <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
         <DialogContent className="fixed inset-0 flex items-center justify-center z-50">
           <div className="bg-[#1e1728] p-6 rounded-md shadow-lg w-full max-w-md">
@@ -354,5 +354,3 @@ const AddTask = () => {
 };
 
 export default AddTask;
-
-// Done
