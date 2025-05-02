@@ -301,3 +301,6 @@ export default function UserProfile() {
     </div>
   );
 }
+
+
+// API for Delete Avatar 
