@@ -16,7 +16,7 @@ import { useForm, Controller } from "react-hook-form";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-// Validation schema with Zod
+// Validation schema
 const taskSchema = z.object({
   title: z.string().min(1, "Title Required").regex(/^\D*$/, "Invalid Title"),
   description: z
@@ -41,71 +41,63 @@ const AddTask = () => {
   });
 
   const {
-    handleSubmit,
     control,
-    setValue,
+    handleSubmit,
+    reset,
     formState: { errors, isSubmitting },
   } = useForm({
     resolver: zodResolver(taskSchema),
-    defaultValues: {
-      title: "",
-      description: "",
-    },
+    defaultValues: { title: "", description: "" },
   });
 
-  const [dialogTitle, setDialogTitle] = useState("");
-  const [dialogDescription, setDialogDescription] = useState("");
+  const {
+    control: editControl,
+    handleSubmit: handleEditSubmit,
+    reset: resetEditForm,
+    formState: { errors: editErrors, isSubmitting: isEditSubmitting },
+  } = useForm({
+    resolver: zodResolver(taskSchema),
+    defaultValues: { title: "", description: "" },
+  });
+
   const [editTaskId, setEditTaskId] = useState(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [taskToDelete, setTaskToDelete] = useState(null);
-  const [isSaving, setIsSaving] = useState(false);
 
   const handleAddSubmit = async (data) => {
-    setIsSaving(true);
-
     const res = await fetch("/api/tasks", {
       method: "POST",
       body: JSON.stringify(data),
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
     });
 
     if (res.ok) {
       queryClient.invalidateQueries(["tasks"]);
       toast.success("Task added successfully!");
-      setValue("title", "");
-      setValue("description", "");
+      reset();
     } else {
       toast.error("Failed to add task");
     }
-
-    setIsSaving(false);
   };
 
-  const handleEditSubmit = async (data) => {
-    setIsSaving(true);
+  const openEditDialog = (task) => {
+    setEditTaskId(task._id);
+    resetEditForm({ title: task.title, description: task.description });
+    setIsDialogOpen(true);
+  };
 
-    const updatedTask = {
-      _id: editTaskId,
-      title: data.title,
-      description: data.description,
-    };
+  const handleEditSave = async (data) => {
     await fetch(`/api/tasks/${editTaskId}`, {
       method: "PUT",
-      body: JSON.stringify(updatedTask),
-      headers: {
-        "Content-Type": "application/json",
-      },
+      body: JSON.stringify({ _id: editTaskId, ...data }),
+      headers: { "Content-Type": "application/json" },
     });
+
     queryClient.invalidateQueries(["tasks"]);
     toast.success("Task updated successfully!");
-    setIsSaving(false);
     setIsDialogOpen(false);
     setEditTaskId(null);
-    setDialogTitle("");
-    setDialogDescription("");
   };
 
   const openDeleteDialog = (task) => {
@@ -114,27 +106,18 @@ const AddTask = () => {
   };
 
   const confirmDelete = async () => {
-    if (taskToDelete) {
-      try {
-        await fetch(`/api/tasks/${taskToDelete._id}`, {
-          method: "DELETE",
-        });
-        queryClient.invalidateQueries(["tasks"]);
-        toast.success("Task deleted successfully!");
-      } catch (error) {
-        toast.error("Failed to delete task.");
-      } finally {
-        setIsDeleteDialogOpen(false);
-        setTaskToDelete(null);
-      }
+    try {
+      await fetch(`/api/tasks/${taskToDelete._id}`, {
+        method: "DELETE",
+      });
+      queryClient.invalidateQueries(["tasks"]);
+      toast.success("Task deleted successfully!");
+    } catch {
+      toast.error("Failed to delete task");
+    } finally {
+      setIsDeleteDialogOpen(false);
+      setTaskToDelete(null);
     }
-  };
-
-  const editTask = (task) => {
-    setEditTaskId(task._id);
-    setDialogTitle(task.title);
-    setDialogDescription(task.description);
-    setIsDialogOpen(true);
   };
 
   const truncateDescription = (text, wordLimit = 3) => {
@@ -146,10 +129,8 @@ const AddTask = () => {
 
   return (
     <div className="max-w-4xl mx-auto p-5 mt-15">
-      <form
-        onSubmit={handleSubmit(handleAddSubmit)}
-        className="mb-5 flex flex-wrap gap-3"
-      >
+      {/* Add Task Form */}
+      <form onSubmit={handleSubmit(handleAddSubmit)} className="mb-5 flex flex-wrap gap-3">
         <div className="w-full sm:w-64">
           <Controller
             name="title"
@@ -159,17 +140,14 @@ const AddTask = () => {
                 <input
                   {...field}
                   type="text"
-                  className="border-1 px-3 py-2 w-full border-violet-800 placeholder-gray-500 text-gray-400 rounded-md"
                   placeholder="Enter Task Title"
+                  className="border px-3 py-2 w-full border-violet-800 text-gray-400 rounded-md"
                 />
-                <p className="text-red-500 text-xs min-h-[20px]">
-                  {errors.title?.message || " "}
-                </p>
+                <p className="text-red-500 text-xs min-h-[20px]">{errors.title?.message}</p>
               </>
             )}
           />
         </div>
-
         <div className="w-full sm:w-64">
           <Controller
             name="description"
@@ -179,73 +157,53 @@ const AddTask = () => {
                 <input
                   {...field}
                   type="text"
-                  className="border-1 px-3 py-2 w-full border-violet-800 placeholder-gray-500 text-gray-400 rounded-md"
                   placeholder="Enter Description"
+                  className="border px-3 py-2 w-full border-violet-800 text-gray-400 rounded-md"
                 />
-                <p className="text-red-500 text-xs min-h-[20px]">
-                  {errors.description?.message || " "}
-                </p>
+                <p className="text-red-500 text-xs min-h-[20px]">{errors.description?.message}</p>
               </>
             )}
           />
         </div>
-
         <Button
           type="submit"
-          className="bg-black text-gray-300 px-4 rounded-md font-bold py-2 h-[42px] hover:bg-violet-500 cursor-pointer"
-          disabled={isSubmitting || isSaving}
+          className="bg-black text-gray-300 px-4 font-bold py-2 rounded-md hover:bg-violet-500 cursor-pointer"
+          disabled={isSubmitting}
         >
-          {isSubmitting || isSaving ? "Adding..." : "Add Task"}
+          {isSubmitting ? "Adding..." : "Add Task"}
         </Button>
       </form>
 
-      <div className="p-2 rounded-lg text-amber-50 overflow-x-auto">
+      {/* Task Table */}
+      <div className="p-2 rounded-lg overflow-x-auto">
         {loading ? (
-          <h2 className="text-center text-lg font-semibold flex items-center justify-center">
-            <ImSpinner6 className="animate-spin text-2xl mr-2" />
-            Loading...
-          </h2>
+          <div className="text-center flex justify-center items-center text-lg">
+            <ImSpinner6 className="animate-spin mr-2" /> Loading...
+          </div>
         ) : mainTasks.length > 0 ? (
-          <table className="w-full border-collapse border border-gray-300 text-xs sm:text-sm bg-[90, 16,133,0.38] border-radius-16px backdrop-filter-blur-7.2px -webkit-backdrop-filter-blur-7.2px  p-4 rounded-lg shadow-lg">
+          <table className="w-full border text-sm bg-[#1e1728] rounded-lg shadow-lg">
             <thead>
               <tr className="bg-violet-400 text-gray-800">
-                <th className=" border-gray-400 px-4 py-2 text-center">
-                  Title
-                </th>
-                <th className=" border-gray-400 px-4 py-2 text-center">
-                  Description
-                </th>
-                <th className="border-gray-400 px-4 py-2 text-center">
-                  Action
-                </th>
+                <th className="px-4 py-2">Title</th>
+                <th className="px-4 py-2">Description</th>
+                <th className="px-4 py-2">Actions</th>
               </tr>
             </thead>
             <tbody>
-              {mainTasks.map((task, i) => (
-                <tr key={i} className="border border-gray-400">
-                  <td className="border border-gray-400 px-4 py-2 text-center text-violet-400 font-semibold">
-                    {task.title}
+              {mainTasks.map((task) => (
+                <tr key={task._id} className="border-t divide-x  border-gray-600">
+                  <td className="px-4 py-2 text-violet-400 text-center">{task.title}</td>
+                  <td className="px-4 py-2 text-violet-400 text-center">
+                    {truncateDescription(task.description)}
                   </td>
-                  <td className="border border-gray-400 px-4 py-2 text-center relative group text-violet-400">
-                    <span>{truncateDescription(task.description)}</span>
-                  </td>
-                  <td className="px-4 py-2 flex justify-center gap-2 flex-wrap">
-                    <Button
-                      className="bg-violet-400 hover:bg-violet-500 text-white text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2 rounded-md cursor-pointer"
-                      onClick={() => router.push(`/tasks/${task._id}`)}
-                    >
+                  <td className="px-4 py-2 flex gap-2 justify-center">
+                    <Button onClick={() => router.push(`/tasks/${task._id}`)} className="bg-violet-400 hover:bg-violet-600 text-white text-xs px-3 py-1 rounded-md cursor-pointer">
                       <MdRemoveRedEye />
                     </Button>
-                    <Button
-                      className="bg-violet-400 hover:bg-violet-600 text-white text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2 rounded-md cursor-pointer"
-                      onClick={() => editTask(task)}
-                    >
+                    <Button onClick={() => openEditDialog(task)} className="bg-violet-400 hover:bg-violet-600 text-white text-xs px-3 py-1 rounded-md cursor-pointer">
                       <MdEdit />
                     </Button>
-                    <Button
-                      className="bg-violet-400 hover:bg-red-600 text-white text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2 rounded-md cursor-pointer"
-                      onClick={() => openDeleteDialog(task)}
-                    >
+                    <Button onClick={() => openDeleteDialog(task)} className="bg-violet-400 hover:bg-violet-600 text-white text-xs px-3 py-1 rounded-md cursor-pointer">
                       <MdDelete />
                     </Button>
                   </td>
@@ -254,107 +212,73 @@ const AddTask = () => {
             </tbody>
           </table>
         ) : (
-          <h2 className="text-center text-lg font-semibold">
-            No Task Available
-          </h2>
+          <p className="text-center text-lg font-semibold">No Task Available</p>
         )}
       </div>
 
+      {/* Edit Task Dialog */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        {isDialogOpen && (
-          <>
-            <div className="fixed inset-0 bg-black/60 z-40"></div>
-            <DialogContent className="fixed inset-0 flex items-center justify-center z-50">
-              <div className="bg-[#1e1728] p-6 rounded-md shadow-lg w-full max-w-md">
-                <DialogTitle className="text-lg font-bold text-gray-300">
-                  Edit Task
-                </DialogTitle>
-                <form
-                  onSubmit={handleSubmit(handleEditSubmit)}
-                  className="space-y-4"
-                >
-                  <div>
-                    <label className="block text-sm font-medium text-gray-300">
-                      Title
-                    </label>
-                    <Controller
-                      name="title"
-                      control={control}
-                      render={({ field }) => (
-                        <input
-                          {...field}
-                          type="text"
-                          className="mt-1 block w-full p-2 border border-gray-600 rounded-md bg-[#1e1728] text-gray-300"
-                          value={dialogTitle}
-                          onChange={(e) => setDialogTitle(e.target.value)}
-                        />
-                      )}
+        <DialogContent className="fixed inset-0 flex items-center justify-center z-50">
+          <div className="bg-[#1e1728] p-6 rounded-md shadow-md w-full max-w-md">
+            <DialogTitle className="text-lg font-bold text-gray-300">Edit Task</DialogTitle>
+            <form onSubmit={handleEditSubmit(handleEditSave)} className="space-y-4 mt-4">
+              <div>
+                <Controller
+                  name="title"
+                  control={editControl}
+                  render={({ field }) => (
+                    <input
+                      {...field}
+                      type="text"
+                      className="w-full p-2 border border-gray-600 rounded-md bg-[#1e1728] text-gray-300"
                     />
-                    <p className="text-red-500 text-xs mt-1">
-                      {errors.title?.message}
-                    </p>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-300">
-                      Description
-                    </label>
-                    <Controller
-                      name="description"
-                      control={control}
-                      render={({ field }) => (
-                        <textarea
-                          {...field}
-                          className="mt-1 block w-full p-2 border border-gray-600 rounded-md bg-[#1e1728] text-gray-300"
-                          value={dialogDescription}
-                          onChange={(e) => setDialogDescription(e.target.value)}
-                        />
-                      )}
-                    />
-                    <p className="text-red-500 text-xs mt-1">
-                      {errors.description?.message}
-                    </p>
-                  </div>
-
-                  <div className="flex justify-end gap-2">
-                    <DialogClose asChild>
-                      <Button className="bg-gray-600 text-gray-300 px-4 py-2 rounded-md cursor-pointer">
-                        Cancel
-                      </Button>
-                    </DialogClose>
-                    <Button
-                      type="submit"
-                      className="bg-violet-500 text-white px-4 py-2 rounded-md cursor-pointer"
-                      disabled={isSaving}
-                    >
-                      {isSaving ? "Saving..." : "Save"}
-                    </Button>
-                  </div>
-                </form>
+                  )}
+                />
+                <p className="text-red-500 text-xs">{editErrors.title?.message}</p>
               </div>
-            </DialogContent>
-          </>
-        )}
+              <div>
+                <Controller
+                  name="description"
+                  control={editControl}
+                  render={({ field }) => (
+                    <textarea
+                      {...field}
+                      className="w-full p-2 border border-gray-600 rounded-md bg-[#1e1728] text-gray-300"
+                    />
+                  )}
+                />
+                <p className="text-red-500 text-xs">{editErrors.description?.message}</p>
+              </div>
+              <div className="flex justify-end gap-2">
+                <DialogClose asChild>
+                  <Button className="bg-gray-600 text-white px-4 py-2 rounded-md cursor-pointer">Cancel</Button>
+                </DialogClose>
+                <Button
+                  type="submit"
+                  className="bg-violet-500 text-white px-4 py-2 rounded-md cursor-pointer"
+                  disabled={isEditSubmitting}
+                >
+                  {isEditSubmitting ? "Saving..." : "Save"}
+                </Button>
+              </div>
+            </form>
+          </div>
+        </DialogContent>
       </Dialog>
 
+      {/* Delete Confirmation Dialog */}
       <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
         <DialogContent className="fixed inset-0 flex items-center justify-center z-50">
-          <div className="bg-[#1e1728] p-6 rounded-md shadow-lg w-full max-w-md">
-            <DialogTitle className="text-lg font-bold text-gray-300">
-              Confirm Delete
-            </DialogTitle>
-            <p className="text-gray-400 mt-4">
-              Are you sure you want to delete this task?
-            </p>
+          <div className="bg-[#1e1728] p-6 rounded-md shadow-md w-full max-w-md">
+            <DialogTitle className="text-lg font-bold text-gray-300">Confirm Delete</DialogTitle>
+            <p className="text-gray-400 mt-4">Are you sure you want to delete this task?</p>
             <div className="flex justify-end gap-2 mt-6">
               <DialogClose asChild>
-                <Button className="bg-gray-600 text-gray-300 px-4 py-2 rounded-md cursor-pointer hover:bg-gray-700">
-                  Cancel
-                </Button>
+                <Button className="bg-gray-600 text-white px-4 py-2 rounded-md">Cancel</Button>
               </DialogClose>
               <Button
                 onClick={confirmDelete}
-                className="bg-red-500 text-white px-4 py-2 rounded-md cursor-pointer hover:bg-red-600"
+                className="bg-red-500 text-white px-4 py-2 rounded-md"
               >
                 Delete
               </Button>
