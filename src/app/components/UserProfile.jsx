@@ -2,7 +2,7 @@
 import { useState, useEffect, useRef } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { Button } from "@/components/ui/button";
-import { PencilIcon, CheckIcon } from "@heroicons/react/24/solid";
+import { PencilIcon, CheckIcon, TrashIcon } from "@heroicons/react/24/solid";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -117,32 +117,6 @@ export default function UserProfile() {
     }
   };
 
-  const handleDeleteAvatar = async () => {
-    const userId = user._id;
-
-    try {
-      const res = await fetch(`/api/deletephoto?userId=${userId}`, {
-        method: "DELETE",
-      });
-
-      if (res.ok) {
-        toast.success("Avatar deleted");
-        setUser((prevUser) => ({
-          ...prevUser,
-          avatarUrl: "",
-        }));
-        setPreview(null);
-        setAvatar(null);
-        setEditingAvatar(false);
-      } else {
-        toast.error("Failed to delete avatar");
-      }
-    } catch (err) {
-      console.error(err);
-      toast.error("Error deleting avatar");
-    }
-  };
-
   const handleFormSubmit = async (data) => {
     try {
       const response = await fetch("/api/update", {
@@ -168,6 +142,28 @@ export default function UserProfile() {
     }
   };
 
+  const handleDeleteAvatar = async () => {
+    try {
+      const response = await fetch("/api/deleteavtar", {
+        method: "DELETE",
+      });
+
+      if (response.ok) {
+        toast.success("Avatar deleted!");
+        setUser((prevUser) => ({
+          ...prevUser,
+          avatarUrl: "",
+        }));
+        setPreview("");
+      } else {
+        toast.error("Failed to delete avatar");
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("Network or server error");
+    }
+  };
+
   return (
     <div className=" bg-gradient-to-r mt-20">
       <div className="bg-[#100224] p-8 rounded-lg shadow-lg w-full max-w-lg mb-5">
@@ -183,16 +179,26 @@ export default function UserProfile() {
                 className="w-full h-full object-cover"
               />
             ) : (
-              <span>{getInitials()}</span>
+              <span className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-3xl">{getInitials()}</span>
             )}
-            <button
-              type="button"
-              onClick={() => fileInputRef.current.click()}
-              className="absolute bottom-1 right-1 bg-white p-1 rounded-full cursor-pointer hover:bg-gray-200 transition duration-200 ease-in-out"
-              title="Update Avatar"
-            >
-              <PencilIcon className="h-4 w-4 text-black" />
-            </button>
+            <div className="absolute bottom-1 right-1 flex space-x-1">
+              <button
+                type="button"
+                onClick={() => fileInputRef.current.click()}
+                className="bg-white p-1 rounded-full cursor-pointer hover:bg-gray-200 transition"
+                title="Update Avatar"
+              >
+                <PencilIcon className="h-4 w-4 text-black" />
+              </button>
+              <button
+                type="button"
+                onClick={handleDeleteAvatar}
+                className="bg-white p-1 rounded-full cursor-pointer hover:bg-gray-200 transition"
+                title="Delete Avatar"
+              >
+                <TrashIcon className="h-4 w-4 text-black" />
+              </button>
+            </div>
           </div>
 
           {editingAvatar && (
@@ -302,5 +308,4 @@ export default function UserProfile() {
   );
 }
 
-
-// API for Delete Avatar 
+// API for Delete Avatar
