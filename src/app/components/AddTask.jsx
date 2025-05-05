@@ -130,7 +130,10 @@ const AddTask = () => {
   return (
     <div className="max-w-4xl mx-auto p-5 mt-15">
       {/* Add Task Form */}
-      <form onSubmit={handleSubmit(handleAddSubmit)} className="mb-5 flex flex-wrap gap-3">
+      <form
+        onSubmit={handleSubmit(handleAddSubmit)}
+        className="mb-5 flex flex-wrap gap-3"
+      >
         <div className="w-full sm:w-64">
           <Controller
             name="title"
@@ -143,7 +146,9 @@ const AddTask = () => {
                   placeholder="Enter Task Title"
                   className="border px-3 py-2 w-full border-violet-800 text-gray-400 rounded-md"
                 />
-                <p className="text-red-500 text-xs min-h-[20px]">{errors.title?.message}</p>
+                <p className="text-red-500 text-xs min-h-[20px]">
+                  {errors.title?.message}
+                </p>
               </>
             )}
           />
@@ -160,7 +165,9 @@ const AddTask = () => {
                   placeholder="Enter Description"
                   className="border px-3 py-2 w-full border-violet-800 text-gray-400 rounded-md"
                 />
-                <p className="text-red-500 text-xs min-h-[20px]">{errors.description?.message}</p>
+                <p className="text-red-500 text-xs min-h-[20px]">
+                  {errors.description?.message}
+                </p>
               </>
             )}
           />
@@ -191,19 +198,33 @@ const AddTask = () => {
             </thead>
             <tbody>
               {mainTasks.map((task) => (
-                <tr key={task._id} className="border-t divide-x  border-gray-600">
-                  <td className="px-4 py-2 text-violet-400 text-center">{task.title}</td>
+                <tr
+                  key={task._id}
+                  className="border-t divide-x  border-gray-600"
+                >
+                  <td className="px-4 py-2 text-violet-400 text-center">
+                    {task.title}
+                  </td>
                   <td className="px-4 py-2 text-violet-400 text-center">
                     {truncateDescription(task.description)}
                   </td>
                   <td className="px-4 py-2 flex gap-2 justify-center">
-                    <Button onClick={() => router.push(`/tasks/${task._id}`)} className="bg-violet-400 hover:bg-violet-600 text-white text-xs px-3 py-1 rounded-md cursor-pointer">
+                    <Button
+                      onClick={() => router.push(`/tasks/${task._id}`)}
+                      className="bg-violet-400 hover:bg-violet-600 text-white text-xs px-3 py-1 rounded-md cursor-pointer"
+                    >
                       <MdRemoveRedEye />
                     </Button>
-                    <Button onClick={() => openEditDialog(task)} className="bg-violet-400 hover:bg-violet-600 text-white text-xs px-3 py-1 rounded-md cursor-pointer">
+                    <Button
+                      onClick={() => openEditDialog(task)}
+                      className="bg-violet-400 hover:bg-violet-600 text-white text-xs px-3 py-1 rounded-md cursor-pointer"
+                    >
                       <MdEdit />
                     </Button>
-                    <Button onClick={() => openDeleteDialog(task)} className="bg-violet-400 hover:bg-violet-600 text-white text-xs px-3 py-1 rounded-md cursor-pointer">
+                    <Button
+                      onClick={() => openDeleteDialog(task)}
+                      className="bg-violet-400 hover:bg-violet-600 text-white text-xs px-3 py-1 rounded-md cursor-pointer"
+                    >
                       <MdDelete />
                     </Button>
                   </td>
@@ -220,8 +241,13 @@ const AddTask = () => {
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent className="fixed inset-0 flex items-center justify-center z-50">
           <div className="bg-[#1e1728] p-6 rounded-md shadow-md w-full max-w-md">
-            <DialogTitle className="text-lg font-bold text-gray-300">Edit Task</DialogTitle>
-            <form onSubmit={handleEditSubmit(handleEditSave)} className="space-y-4 mt-4">
+            <DialogTitle className="text-lg font-bold text-gray-300">
+              Edit Task
+            </DialogTitle>
+            <form
+              onSubmit={handleEditSubmit(handleEditSave)}
+              className="space-y-4 mt-4"
+            >
               <div>
                 <Controller
                   name="title"
@@ -234,7 +260,9 @@ const AddTask = () => {
                     />
                   )}
                 />
-                <p className="text-red-500 text-xs">{editErrors.title?.message}</p>
+                <p className="text-red-500 text-xs">
+                  {editErrors.title?.message}
+                </p>
               </div>
               <div>
                 <Controller
@@ -247,11 +275,15 @@ const AddTask = () => {
                     />
                   )}
                 />
-                <p className="text-red-500 text-xs">{editErrors.description?.message}</p>
+                <p className="text-red-500 text-xs">
+                  {editErrors.description?.message}
+                </p>
               </div>
               <div className="flex justify-end gap-2">
                 <DialogClose asChild>
-                  <Button className="bg-gray-600 text-white px-4 py-2 rounded-md cursor-pointer">Cancel</Button>
+                  <Button className="bg-gray-600 text-white px-4 py-2 rounded-md cursor-pointer">
+                    Cancel
+                  </Button>
                 </DialogClose>
                 <Button
                   type="submit"
@@ -270,11 +302,17 @@ const AddTask = () => {
       <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
         <DialogContent className="fixed inset-0 flex items-center justify-center z-50">
           <div className="bg-[#1e1728] p-6 rounded-md shadow-md w-full max-w-md">
-            <DialogTitle className="text-lg font-bold text-gray-300">Confirm Delete</DialogTitle>
-            <p className="text-gray-400 mt-4">Are you sure you want to delete this task?</p>
+            <DialogTitle className="text-lg font-bold text-gray-300">
+              Confirm Delete
+            </DialogTitle>
+            <p className="text-gray-400 mt-4">
+              Are you sure you want to delete this task?
+            </p>
             <div className="flex justify-end gap-2 mt-6">
               <DialogClose asChild>
-                <Button className="bg-gray-600 text-white px-4 py-2 rounded-md">Cancel</Button>
+                <Button className="bg-gray-600 text-white px-4 py-2 rounded-md">
+                  Cancel
+                </Button>
               </DialogClose>
               <Button
                 onClick={confirmDelete}
