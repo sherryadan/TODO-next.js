@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import { Button } from "@/components/ui/button";
 import { PencilIcon, CheckIcon, TrashIcon } from "@heroicons/react/24/solid";
 import { useForm } from "react-hook-form";
@@ -179,7 +179,9 @@ export default function UserProfile() {
                 className="w-full h-full object-cover"
               />
             ) : (
-              <span className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-3xl">{getInitials()}</span>
+              <span className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-3xl">
+                {getInitials()}
+              </span>
             )}
             <div className="absolute bottom-1 right-1 flex space-x-1">
               <button
