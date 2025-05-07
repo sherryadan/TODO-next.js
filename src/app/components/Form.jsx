@@ -202,7 +202,6 @@ const Form = () => {
               {errors.password?.message}
             </p>
           </div>
-
           <div>
             <label className="text-sm font-medium text-gray-300">
               Confirm Password

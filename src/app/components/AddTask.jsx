@@ -80,7 +80,6 @@ const AddTask = () => {
       toast.error("Failed to add task");
     }
   };
-
   const openEditDialog = (task) => {
     setEditTaskId(task._id);
     resetEditForm({ title: task.title, description: task.description });
