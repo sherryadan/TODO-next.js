@@ -223,7 +223,7 @@ const AddTask = () => {
                     </Button>
                     <Button
                       onClick={() => openDeleteDialog(task)}
-                      className="bg-violet-400 hover:bg-violet-600 text-white text-xs px-3 py-1 rounded-md cursor-pointer"
+                      className="bg-violet-400 hover:bg-red-600 text-white text-xs px-3 py-1 rounded-md cursor-pointer"
                     >
                       <MdDelete />
                     </Button>
