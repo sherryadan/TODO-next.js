@@ -12,7 +12,7 @@ import {
   DropdownMenuItem,
   DropdownMenuGroup,
 } from "@/components/ui/dropdown-menu";
-import { FaUser, FaSignOutAlt } from "react-icons/fa"; 
+import { FaUser, FaSignOutAlt } from "react-icons/fa";
 
 function NavLink({ children, to }) {
   return (
@@ -77,14 +77,18 @@ function UserDropdown({ user }) {
   };
 
   const initials = `${user.firstName[0]}${user.lastName[0]}`;
-  const imageUrl = user.avatarUrl || "/uploads/default-avatar.png"; // Use the avatar URL or fallback to default avatar
+  const imageUrl = user.avatarUrl || "/uploads/default-avatar.png"; // Use the avatar URL
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <button className="focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 rounded-full">
           <Avatar className="cursor-pointer hover:opacity-80 transition-opacity size-11">
-            <AvatarImage src={imageUrl} alt={user.firstName} className="rounded-full" />
+            <AvatarImage
+              src={imageUrl}
+              alt={user.firstName}
+              className="rounded-full"
+            />
             <AvatarFallback className="text-black">{initials}</AvatarFallback>
           </Avatar>
         </button>
@@ -129,7 +133,6 @@ export default function Navbar() {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    // Fetch user data from the API
     async function fetchUserData() {
       const response = await fetch("/api/users");
       const data = await response.json();
@@ -171,7 +174,7 @@ export default function Navbar() {
         <div className="hidden md:flex text-white">
           <div className="flex items-center">
             <NavLink to="/"> Home</NavLink>
-            <NavLink to="/about">Contact Us</NavLink>
+            <NavLink to="/taskgroups">Group Tasks</NavLink>
           </div>
           {user && <UserDropdown user={user} />}
         </div>
@@ -180,4 +183,4 @@ export default function Navbar() {
   );
 }
 
-// Done 
+// Done

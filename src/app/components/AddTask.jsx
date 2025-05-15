@@ -16,13 +16,15 @@ import { useForm, Controller } from "react-hook-form";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-// Validation schema
 const taskSchema = z.object({
-  title: z.string().min(1, "Title Required").regex(/^\D*$/, "Invalid Title"),
+  title: z
+    .string()
+    .min(1, "Title Required")
+    .regex(/^[^\d]*$/, "Invalid Title"),
   description: z
     .string()
     .min(1, "Description Required")
-    .regex(/^\D*$/, "Invalid Description"),
+    .regex(/^[^\d]*$/, "Invalid Description"),
 });
 
 const fetchTasks = async () => {
@@ -64,6 +66,10 @@ const AddTask = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [taskToDelete, setTaskToDelete] = useState(null);
+  const [isCreatingGroup, setIsCreatingGroup] = useState(false);
+  const [selectedTasks, setSelectedTasks] = useState(new Set());
+  const [isGroupNameDialogOpen, setIsGroupNameDialogOpen] = useState(false);
+  const [groupName, setGroupName] = useState("");
 
   const handleAddSubmit = async (data) => {
     const res = await fetch("/api/tasks", {
@@ -80,6 +86,7 @@ const AddTask = () => {
       toast.error("Failed to add task");
     }
   };
+
   const openEditDialog = (task) => {
     setEditTaskId(task._id);
     resetEditForm({ title: task.title, description: task.description });
@@ -106,9 +113,7 @@ const AddTask = () => {
 
   const confirmDelete = async () => {
     try {
-      await fetch(`/api/tasks/${taskToDelete._id}`, {
-        method: "DELETE",
-      });
+      await fetch(`/api/tasks/${taskToDelete._id}`, { method: "DELETE" });
       queryClient.invalidateQueries(["tasks"]);
       toast.success("Task deleted successfully!");
     } catch {
@@ -126,9 +131,55 @@ const AddTask = () => {
       : text;
   };
 
+  const toggleTaskSelection = (taskId) => {
+    const newSelected = new Set(selectedTasks);
+    if (newSelected.has(taskId)) newSelected.delete(taskId);
+    else newSelected.add(taskId);
+    setSelectedTasks(newSelected);
+  };
+
+  const toggleCreateGroup = () => {
+    if (selectedTasks.size === 0) {
+      toast.error("Please select at least one task");
+      return;
+    }
+    setIsGroupNameDialogOpen(true);
+  };
+
+  const handleGroupNameSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!groupName.trim()) {
+      toast.error("Group name is required");
+      return;
+    }
+
+    try {
+      const res = await fetch("/api/taskgroup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: groupName,
+          taskIds: Array.from(selectedTasks),
+        }),
+      });
+
+      if (!res.ok) throw new Error("Failed to create group");
+
+      toast.success(
+        `Group "${groupName}" created with ${selectedTasks.size} tasks!`
+      );
+      setIsGroupNameDialogOpen(false);
+      setIsCreatingGroup(false);
+      setSelectedTasks(new Set());
+      setGroupName("");
+      queryClient.invalidateQueries(["tasks"]);
+    } catch (err) {
+      toast.error("Failed to create group");
+    }
+  };
   return (
     <div className="max-w-4xl mx-auto p-5 mt-15">
-      {/* Add Task Form */}
       <form
         onSubmit={handleSubmit(handleAddSubmit)}
         className="mb-5 flex flex-wrap gap-3"
@@ -180,7 +231,6 @@ const AddTask = () => {
         </Button>
       </form>
 
-      {/* Task Table */}
       <div className="p-2 rounded-lg overflow-x-auto">
         {loading ? (
           <div className="text-center flex justify-center items-center text-lg">
@@ -190,6 +240,23 @@ const AddTask = () => {
           <table className="w-full border text-sm bg-[#1e1728] rounded-lg shadow-lg">
             <thead>
               <tr className="bg-violet-400 text-gray-800">
+                {isCreatingGroup && (
+                  <th className="px-4 py-2">
+                    <input
+                      type="checkbox"
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          setSelectedTasks(
+                            new Set(mainTasks.map((t) => t._id))
+                          );
+                        } else {
+                          setSelectedTasks(new Set());
+                        }
+                      }}
+                      checked={selectedTasks.size === mainTasks.length}
+                    />
+                  </th>
+                )}
                 <th className="px-4 py-2">Title</th>
                 <th className="px-4 py-2">Description</th>
                 <th className="px-4 py-2">Actions</th>
@@ -199,8 +266,17 @@ const AddTask = () => {
               {mainTasks.map((task) => (
                 <tr
                   key={task._id}
-                  className="border-t divide-x  border-gray-600"
+                  className="border-t divide-x border-gray-600"
                 >
+                  {isCreatingGroup && (
+                    <td className="px-4 py-2 text-center">
+                      <input
+                        type="checkbox"
+                        checked={selectedTasks.has(task._id)}
+                        onChange={() => toggleTaskSelection(task._id)}
+                      />
+                    </td>
+                  )}
                   <td className="px-4 py-2 text-violet-400 text-center">
                     {task.title}
                   </td>
@@ -211,18 +287,21 @@ const AddTask = () => {
                     <Button
                       onClick={() => router.push(`/tasks/${task._id}`)}
                       className="bg-violet-400 hover:bg-violet-600 text-white text-xs px-3 py-1 rounded-md cursor-pointer"
+                      disabled={isCreatingGroup}
                     >
                       <MdRemoveRedEye />
                     </Button>
                     <Button
                       onClick={() => openEditDialog(task)}
                       className="bg-violet-400 hover:bg-violet-600 text-white text-xs px-3 py-1 rounded-md cursor-pointer"
+                      disabled={isCreatingGroup}
                     >
                       <MdEdit />
                     </Button>
                     <Button
                       onClick={() => openDeleteDialog(task)}
                       className="bg-violet-400 hover:bg-red-600 text-white text-xs px-3 py-1 rounded-md cursor-pointer"
+                      disabled={isCreatingGroup}
                     >
                       <MdDelete />
                     </Button>
@@ -236,7 +315,36 @@ const AddTask = () => {
         )}
       </div>
 
-      {/* Edit Task Dialog */}
+      {mainTasks.length > 0 && (
+        <div className="mt-4 flex items-center gap-3">
+          {!isCreatingGroup ? (
+            <Button
+              onClick={() => setIsCreatingGroup(true)}
+              className="bg-violet-600 hover:bg-violet-700 text-white px-6 py-3 rounded-md font-semibold shadow-lg"
+            >
+              Create Group
+            </Button>
+          ) : (
+            <>
+              <Button
+                onClick={toggleCreateGroup}
+                className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-md font-semibold shadow-lg"
+              >
+                Done
+              </Button>
+              <Button
+                onClick={() => {
+                  setIsCreatingGroup(false);
+                  setSelectedTasks(new Set());
+                }}
+                className="bg-gray-600 hover:bg-gray-700 text-white px-6 py-3 rounded-md font-semibold shadow-lg"
+              >
+                Cancel
+              </Button>
+            </>
+          )}
+        </div>
+      )}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent className="fixed inset-0 flex items-center justify-center z-50">
           <div className="bg-[#1e1728] p-6 rounded-md shadow-md w-full max-w-md">
@@ -297,7 +405,6 @@ const AddTask = () => {
         </DialogContent>
       </Dialog>
 
-      {/* Delete Confirmation Dialog */}
       <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
         <DialogContent className="fixed inset-0 flex items-center justify-center z-50">
           <div className="bg-[#1e1728] p-6 rounded-md shadow-md w-full max-w-md">
@@ -320,6 +427,45 @@ const AddTask = () => {
                 Delete
               </Button>
             </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog
+        open={isGroupNameDialogOpen}
+        onOpenChange={setIsGroupNameDialogOpen}
+      >
+        <DialogContent className="fixed inset-0 flex items-center justify-center z-50">
+          <div className="bg-[#1e1728] p-6 rounded-md shadow-md w-full max-w-md">
+            <DialogTitle className="text-lg font-bold text-gray-300">
+              Name Your Group
+            </DialogTitle>
+            <form onSubmit={handleGroupNameSubmit} className="mt-4 space-y-4">
+              <input
+                type="text"
+                value={groupName}
+                onChange={(e) => setGroupName(e.target.value)}
+                placeholder="Enter group name"
+                className="w-full p-2 border border-gray-600 rounded-md bg-[#1e1728] text-gray-300"
+              />
+              <div className="flex justify-end gap-2">
+                <DialogClose asChild>
+                  <Button
+                    type="button"
+                    className="bg-gray-600 text-white px-4 py-2 rounded-md"
+                    onClick={() => setGroupName("")}
+                  >
+                    Cancel
+                  </Button>
+                </DialogClose>
+                <Button
+                  type="submit"
+                  className="bg-violet-500 text-white px-4 py-2 rounded-md"
+                >
+                  Create Group
+                </Button>
+              </div>
+            </form>
           </div>
         </DialogContent>
       </Dialog>
