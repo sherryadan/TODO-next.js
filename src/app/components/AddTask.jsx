@@ -15,12 +15,10 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useForm, Controller } from "react-hook-form";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import Credentials from "next-auth/providers/credentials";
 
 const taskSchema = z.object({
-  title: z
-    .string()
-    .min(1, "Title Required")
-    .regex(/^[^\d]*$/, "Invalid Title"),
+  title: z.string().min(1, "Title Required").regex(/^[^\d]*$/, "Invalid Title"),
   description: z
     .string()
     .min(1, "Description Required")
@@ -70,6 +68,7 @@ const AddTask = () => {
   const [selectedTasks, setSelectedTasks] = useState(new Set());
   const [isGroupNameDialogOpen, setIsGroupNameDialogOpen] = useState(false);
   const [groupName, setGroupName] = useState("");
+  const [isGroupCreating, setIsGroupCreating] = useState(false);
 
   const handleAddSubmit = async (data) => {
     const res = await fetch("/api/tasks", {
@@ -154,21 +153,39 @@ const AddTask = () => {
       return;
     }
 
+    setIsGroupCreating(true);
+
     try {
-      const res = await fetch("/api/taskgroup", {
+      // Step 1: Create the group
+      const createGroupRes = await fetch("/api/taskgroup", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: groupName,
-          taskIds: Array.from(selectedTasks),
-        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name: groupName }),
       });
 
-      if (!res.ok) throw new Error("Failed to create group");
+      if (!createGroupRes.ok) throw new Error("Failed to create group");
 
-      toast.success(
-        `Group "${groupName}" created with ${selectedTasks.size} tasks!`
-      );
+      const { groupId } = await createGroupRes.json();
+
+      // Step 2: Update each selected task with this groupId
+      for (const taskId of selectedTasks) {
+        const res = await fetch("/api/taskaddgroup", {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ taskId, groupId }),
+        });
+        if (!res.ok) {
+          toast.error(`Failed to add task ${taskId} to group`);
+          setIsGroupCreating(false);
+          return;
+        }
+      }
+
+      toast.success(`Group "${groupName}" created with ${selectedTasks.size} tasks!`);
       setIsGroupNameDialogOpen(false);
       setIsCreatingGroup(false);
       setSelectedTasks(new Set());
@@ -176,6 +193,8 @@ const AddTask = () => {
       queryClient.invalidateQueries(["tasks"]);
     } catch (err) {
       toast.error("Failed to create group");
+    } finally {
+      setIsGroupCreating(false);
     }
   };
   return (
