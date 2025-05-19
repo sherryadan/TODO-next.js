@@ -133,12 +133,19 @@ const TaskGroupsPage = () => {
                 value={shareGroupLink || ""}
                 className="p-2 border border-gray-600 rounded-md bg-[#1e1728] text-gray-300"
               />
-              <Button
-                onClick={copyLinkToClipboard}
-                className="bg-violet-600 hover:bg-violet-700 text-white px-4 py-2 rounded-md"
-              >
-                Copy to Clipboard
-              </Button>
+              <div className="flex justify-end gap-2 mt-4">
+                <DialogClose asChild>
+                  <Button className="bg-gray-600 text-white px-4 py-2 rounded-md">
+                    Cancel
+                  </Button>
+                </DialogClose>
+                <Button
+                  onClick={copyLinkToClipboard}
+                  className="bg-violet-600 hover:bg-violet-700 text-white px-4 py-2 rounded-md"
+                >
+                  Copy to Clipboard
+                </Button>
+              </div>
             </div>
           </div>
         </DialogContent>
@@ -183,9 +190,11 @@ const TaskGroupsPage = () => {
               Tasks in Group: {selectedGroup?.name}
             </DialogTitle>
             <ul className="mt-4 list-disc pl-5 text-gray-300 max-h-80 overflow-y-auto">
-              {selectedGroup?.taskIds?.map((taskId, index) => (
-                <li key={taskId} className="mb-1">
-                  Task ID: {taskId}
+              {selectedGroup?.taskIds?.map((task, index) => (
+                <li key={task._id || index} className="mb-1">
+                  {task.title
+                    ? ` ${task.title}`
+                    : `Task ID: ${task._id || "Unknown"}`}
                 </li>
               ))}
             </ul>

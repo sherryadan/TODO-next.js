@@ -159,10 +159,13 @@ const AddTask = () => {
 
     try {
       // Step 1: Create the group
-      const response = await fetch("/api/grouptasks", {
+      const response = await fetch("/api/taskgroup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: groupName, tasks: selectedTaskIds }),
+        body: JSON.stringify({
+          name: groupName,
+          tasks: Array.from(selectedTasks),
+        }),
       });
 
       const data = await response.json();
@@ -170,6 +173,9 @@ const AddTask = () => {
 
       if (!groupId) {
         console.error("Group ID not returned");
+        toast.error("Failed to create group");
+        setIsGroupCreating(false);
+        return;
       }
 
       // Step 2: Update each selected task with this groupId
@@ -180,7 +186,6 @@ const AddTask = () => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({ taskId, groupId }),
-          credentials: "include", // <-- This is the fix
         });
 
         if (!res.ok) {
@@ -204,6 +209,7 @@ const AddTask = () => {
       setIsGroupCreating(false);
     }
   };
+
   return (
     <div className="max-w-4xl mx-auto p-5 mt-15">
       <form

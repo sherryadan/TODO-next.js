@@ -1,3 +1,4 @@
+import { Group } from "lucide-react";
 import mongoose from "mongoose";
 
 
@@ -12,6 +13,7 @@ const TaskGroupSchema = new mongoose.Schema({
   shareToken: { type: String, default: null },
   linkAccess: { type: String, enum: ["off", "read", "edit"], default: "off" },
   createdAt: { type: Date, default: Date.now },
+  groupid: { type: String, unique: true },
 });
 
 export default mongoose.models.TaskGroup ||

@@ -3,6 +3,8 @@ import connectionToDatabase from "../../../../lib/mongoosedb";
 import TaskGroup from "../../../../models/TaskGroup";
 import mongoose from "mongoose";
 import { verifyToken } from "../../../../lib/auth";
+import { v4 as uuidv4 } from "uuid";
+
 export async function POST(request) {
   await connectionToDatabase();
 
@@ -30,10 +32,6 @@ export async function POST(request) {
       );
     }
 
-    console.log("Decoded user ID:", userId);
-    console.log("Group name:", name);
-    console.log("Tasks array:", tasks);
-
     const taskIds = [];
     for (const id of tasks) {
       if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -49,6 +47,7 @@ export async function POST(request) {
       name,
       taskIds,
       createdBy: userId,
+      groupid: uuidv4(),
     });
 
     return NextResponse.json(
@@ -77,7 +76,6 @@ export async function GET(request) {
     // Verify token and get user ID
     const decoded = verifyToken(token);
 
-    // Find groups created by this user and populate taskIds
     const groups = await TaskGroup.find({ createdBy: decoded.id }).populate(
       "taskIds"
     );
