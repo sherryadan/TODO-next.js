@@ -3,5 +3,7 @@
     "env": {
       "NEXT_TELEMETRY_DISABLED": "1"
     }
-  }
+  },
+  "buildCommand": "npm install --legacy-peer-deps && npm run build"
 }
+
