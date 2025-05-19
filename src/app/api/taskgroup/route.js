@@ -3,19 +3,24 @@ import connectionToDatabase from "../../../../lib/mongoosedb";
 import TaskGroup from "../../../../models/TaskGroup";
 import mongoose from "mongoose";
 import { verifyToken } from "../../../../lib/auth";
-
 export async function POST(request) {
   await connectionToDatabase();
 
-  // Extract token from cookies
   const token = request.cookies.get("authToken")?.value;
-
   if (!token) {
     return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
   }
 
   try {
     const decoded = verifyToken(token);
+    const userId = decoded.id || decoded.userId;
+    if (!userId) {
+      return NextResponse.json(
+        { message: "Invalid token data" },
+        { status: 401 }
+      );
+    }
+
     const { name, tasks = [] } = await request.json();
 
     if (!name) {
@@ -25,23 +30,33 @@ export async function POST(request) {
       );
     }
 
-    // Convert task IDs to ObjectId and validate
-    const taskIds = tasks.map(id => {
+    console.log("Decoded user ID:", userId);
+    console.log("Group name:", name);
+    console.log("Tasks array:", tasks);
+
+    const taskIds = [];
+    for (const id of tasks) {
       if (!mongoose.Types.ObjectId.isValid(id)) {
-        throw new Error(`Invalid task ID: ${id}`);
+        return NextResponse.json(
+          { message: `Invalid task ID: ${id}` },
+          { status: 400 }
+        );
       }
-      return new mongoose.Types.ObjectId(id);
-    });
+      taskIds.push(new mongoose.Types.ObjectId(id));
+    }
 
     const newGroup = await TaskGroup.create({
       name,
       taskIds,
-      createdBy: decoded.id,
+      createdBy: userId,
     });
 
-    return NextResponse.json({ message: "Group created", group: newGroup }, { status: 201 });
+    return NextResponse.json(
+      { message: "Group created", groupId: newGroup._id },
+      { status: 201 }
+    );
   } catch (error) {
-    console.error("Error creating group:", error.message);
+    console.error("Error creating group:", error);
     return NextResponse.json(
       { message: "Something went wrong", details: error.message },
       { status: 500 }
@@ -49,15 +64,29 @@ export async function POST(request) {
   }
 }
 
-export async function GET() {
+export async function GET(request) {
   try {
     await connectionToDatabase();
-    const groups = await TaskGroup.find().populate("taskIds");
+
+    // Get auth token from cookies
+    const token = request.cookies.get("authToken")?.value;
+    if (!token) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    }
+
+    // Verify token and get user ID
+    const decoded = verifyToken(token);
+
+    // Find groups created by this user and populate taskIds
+    const groups = await TaskGroup.find({ createdBy: decoded.id }).populate(
+      "taskIds"
+    );
+
     return NextResponse.json(groups, { status: 200 });
   } catch (error) {
-    console.error("Error fetching groups:", error.message);
+    console.error("GET /api/taskgroup error:", error.message);
     return NextResponse.json(
-      { message: "Something went wrong", details: error.message },
+      { message: "Failed to fetch task groups", error: error.message },
       { status: 500 }
     );
   }

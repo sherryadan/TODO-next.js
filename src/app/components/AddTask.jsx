@@ -15,10 +15,12 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useForm, Controller } from "react-hook-form";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import Credentials from "next-auth/providers/credentials";
 
 const taskSchema = z.object({
-  title: z.string().min(1, "Title Required").regex(/^[^\d]*$/, "Invalid Title"),
+  title: z
+    .string()
+    .min(1, "Title Required")
+    .regex(/^[^\d]*$/, "Invalid Title"),
   description: z
     .string()
     .min(1, "Description Required")
@@ -157,17 +159,18 @@ const AddTask = () => {
 
     try {
       // Step 1: Create the group
-      const createGroupRes = await fetch("/api/taskgroup", {
+      const response = await fetch("/api/grouptasks", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ name: groupName }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: groupName, tasks: selectedTaskIds }),
       });
 
-      if (!createGroupRes.ok) throw new Error("Failed to create group");
+      const data = await response.json();
+      const groupId = data.groupId;
 
-      const { groupId } = await createGroupRes.json();
+      if (!groupId) {
+        console.error("Group ID not returned");
+      }
 
       // Step 2: Update each selected task with this groupId
       for (const taskId of selectedTasks) {
@@ -177,7 +180,9 @@ const AddTask = () => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({ taskId, groupId }),
+          credentials: "include", // <-- This is the fix
         });
+
         if (!res.ok) {
           toast.error(`Failed to add task ${taskId} to group`);
           setIsGroupCreating(false);
@@ -185,7 +190,9 @@ const AddTask = () => {
         }
       }
 
-      toast.success(`Group "${groupName}" created with ${selectedTasks.size} tasks!`);
+      toast.success(
+        `Group "${groupName}" created with ${selectedTasks.size} tasks!`
+      );
       setIsGroupNameDialogOpen(false);
       setIsCreatingGroup(false);
       setSelectedTasks(new Set());

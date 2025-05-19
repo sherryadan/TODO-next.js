@@ -5,8 +5,6 @@ import TaskGroup from "../../../../models/TaskGroup";
 import { NextResponse } from "next/server";
 import { verifyToken } from "../../../../lib/auth";
 
-console.log("PATCH /taskaddgroup hit");
-
 export async function PATCH(request) {
   await connectionToDatabase();
 
@@ -18,7 +16,8 @@ export async function PATCH(request) {
   try {
     const decoded = verifyToken(token);
     const { taskId, groupId } = await request.json();
-        console.log("Received taskId:", taskId, "groupId:", groupId);
+
+    console.log("Received taskId:", taskId, "groupId:", groupId);
 
     if (!taskId || !groupId) {
       return NextResponse.json(
@@ -31,8 +30,8 @@ export async function PATCH(request) {
       !mongoose.Types.ObjectId.isValid(taskId) ||
       !mongoose.Types.ObjectId.isValid(groupId)
     ) {
+      console.log("Invalid IDs:", taskId, groupId);
       return NextResponse.json(
-        console.log(taskId, groupId),
         { message: "Invalid taskId or groupId" },
         { status: 400 }
       );
@@ -40,9 +39,9 @@ export async function PATCH(request) {
 
     const task = await Task.findOne({ _id: taskId, userId: decoded.id });
     if (!task) {
+      console.log("Task not found:", taskId);
       return NextResponse.json(
         { message: "Task not found" },
-        console.log("Task", task),
         { status: 404 }
       );
     }
