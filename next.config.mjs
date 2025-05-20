@@ -1,11 +1,13 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    devIndicators: false,
-    experimental: {
-        nodeMiddleware: true,
-      },
+  experimental: {
+    serverActions: {}, // ✅ correct (must be an object)
+    reactCompiler: true, // ✅ still valid
+    nodeMiddleware: true,
+  },
+  turbopack: {
+    enabled: true // ✅ new place to enable Turbopack
+  }
 };
-
-
 
 export default nextConfig;
