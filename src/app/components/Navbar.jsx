@@ -77,7 +77,7 @@ function UserDropdown({ user }) {
   };
 
   const initials = `${user.firstName[0]}${user.lastName[0]}`;
-  const imageUrl = user.avatarUrl || "/uploads/default-avatar.png"; // Use the avatar URL
+  const imageUrl = user.avatarUrl || "/uploads/default-avatar.png"; 
 
   return (
     <DropdownMenu>
@@ -182,5 +182,4 @@ export default function Navbar() {
     </nav>
   );
 }
-
 // Done
