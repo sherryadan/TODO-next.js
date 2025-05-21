@@ -10,7 +10,6 @@
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
-    "@heroui/navbar": "^2.2.15",
     "@heroui/system": "^2.4.13",
     "@heroui/theme": "^2.4.13",
     "@hookform/resolvers": "^4.1.3",
@@ -64,9 +63,8 @@
     "tailwindcss": "^4.1.4"
   },
   "overrides": {
-  "@heroicons/react": {
-    "react": "$react"
+    "@heroicons/react": {
+      "react": "$react"
+    }
   }
-}
-
 }
