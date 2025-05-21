@@ -1,9 +1,3 @@
 {
-  "build": {
-    "env": {},
-    "commands": {
-      "install": "npm install --legacy-peer-deps",
-      "build": "next build"
-    }
-  }
+  "buildCommand": "./vercel-build.sh"
 }

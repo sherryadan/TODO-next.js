@@ -65,5 +65,9 @@
     "@heroicons/react": {
       "react": "$react"
     }
-  }
+  },
+  "config": {
+  "legacy-peer-deps": true
+}
+
 }
