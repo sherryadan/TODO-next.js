@@ -33,17 +33,17 @@ function MobileNav({ open, setOpen }) {
       <div className="flex flex-col ml-4 text-white  ">
         <a
           className="text-xl font-medium my-4"
-          href="/about"
+          href="/"
           onClick={() => setOpen(false)}
         >
-          About
+        Home 
         </a>
         <a
           className="text-xl font-normal my-4"
-          href="/contact"
+          href="/taskgroups"
           onClick={() => setOpen(false)}
         >
-          Contact
+          Group Tasks
         </a>
       </div>
     </div>
