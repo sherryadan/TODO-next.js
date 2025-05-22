@@ -35,14 +35,15 @@
     "mongodb": "^6.15.0",
     "mongoose": "^8.13.2",
     "multer": "^1.4.5-lts.2",
-    "next": "^15.4.0-canary.42",
+    "next": "^15.3.2",
     "next-auth": "^4.24.11",
     "paseto": "^3.1.4",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
     "react-hook-form": "^7.56.1",
     "react-hot-toast": "^2.5.2",
     "react-icons": "^5.5.0",
+    "reactdom": "^2.0.0",
     "tailwind-merge": "^3.2.0",
     "tw-animate-css": "^1.2.5",
     "uuid": "^11.1.0",
@@ -67,7 +68,6 @@
     }
   },
   "config": {
-  "legacy-peer-deps": true
-}
-
+    "legacy-peer-deps": true
+  }
 }

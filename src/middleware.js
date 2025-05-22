@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
-import { verifyToken } from "../lib/auth";
-export function middleware(req) {
+
+export async function middleware(req) {
   const { pathname } = req.nextUrl;
+
   if (pathname.startsWith("/login") || pathname.startsWith("/signup")) {
     return NextResponse.next();
   }
@@ -9,24 +10,28 @@ export function middleware(req) {
   const tokenCookie = req.cookies.get("authToken");
   const token = tokenCookie?.value;
 
-  if (token) {
-    try {
-      verifyToken(token);
+  if (!token) {
+    return NextResponse.redirect(new URL("/login", req.url));
+  }
+
+  try {
+    const verifyRes = await fetch(`${req.nextUrl.origin}/api/verifytoken`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (verifyRes.ok) {
       return NextResponse.next();
-    } catch (error) {
+    } else {
       return NextResponse.redirect(new URL("/login", req.url));
     }
-  }
-  try {
-    const decoded = verifyToken(token);
-    req.userId = decoded.id;
-    return NextResponse.next();
   } catch (error) {
+    console.error("Token verification failed in middleware:", error);
     return NextResponse.redirect(new URL("/login", req.url));
   }
 }
 
 export const config = {
-  runtime: "nodejs",
   matcher: ["/((?!api|_next|static).*)"],
 };

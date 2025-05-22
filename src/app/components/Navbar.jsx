@@ -76,7 +76,7 @@ function UserDropdown({ user }) {
     }
   };
 
-  const initials = `${user.firstName[0]}${user.lastName[0]}`;
+  const initials = `${user.firstName?.[0]}${user.lastName?.[0]}`;
   const imageUrl = user.avatarUrl || "/uploads/default-avatar.png"; 
 
   return (
