@@ -191,7 +191,7 @@ const TaskGroupsPage = () => {
             </DialogTitle>
             <ul className="mt-4 list-disc pl-5 text-gray-300 max-h-80 overflow-y-auto">
               {selectedGroup?.taskIds?.map((task, index) => (
-                <li key={task._id || index} className="mb-1">
+                <li key={task._id || index} className="mb-1 cursor-pointer hover:underline" onClick={() => router.push(`/tasks/${task._id}`)}>
                   {task.title
                     ? ` ${task.title}`
                     : `Task ID: ${task._id || "Unknown"}`}

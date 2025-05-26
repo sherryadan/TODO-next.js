@@ -51,7 +51,7 @@ const TaskDetails = () => {
 
         <Button
           className="w-20 h-10 bg-black text-white rounded-sm text-sm font-medium hover:bg-violet-500 cursor-pointer"
-          onClick={() => router.push("/")}
+          onClick={() => router.back()}
         >
           <IoArrowBackCircle size={24} />
           Back
