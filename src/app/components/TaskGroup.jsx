@@ -47,7 +47,7 @@ const TaskGroupsPage = () => {
   };
 
   const openShareDialog = (group) => {
-    const url = `${window.location.origin}/taskgroup/share/${group._id}`;
+    const url = `${window.location.origin}/taskgroups/share/${group._id}`;
     setShareGroupLink(url);
   };
 
@@ -55,7 +55,7 @@ const TaskGroupsPage = () => {
     if (!shareGroupLink) return;
     navigator.clipboard
       .writeText(shareGroupLink)
-      .then(() => toast.success("Link copied to clipboard!"))
+      .then(() => toast.success("Link copied to clipboard!")) 
       .catch(() => toast.error("Failed to copy link"));
   };
 
