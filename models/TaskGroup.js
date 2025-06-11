@@ -1,4 +1,3 @@
-import { Group } from "lucide-react";
 import mongoose from "mongoose";
 
 
