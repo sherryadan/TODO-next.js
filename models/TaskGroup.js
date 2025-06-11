@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 
-
 const TaskGroupSchema = new mongoose.Schema({
   name: { type: String, required: true },
   taskIds: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Task' }],
